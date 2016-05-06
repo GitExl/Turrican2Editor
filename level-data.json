@@ -1,0 +1,71 @@
+[
+  {
+    "world_file": "L1-1",
+    "levels": [
+      {
+        "name": "The Desert",
+        "blockmap_size": 2132
+      },
+      {
+        "name": "Traps",
+        "blockmap_size": 1349
+      }
+    ]
+  },
+  {
+    "world_file": "L2-1",
+    "levels": [
+      {
+        "name": "The Great Bath",
+        "blockmap_size": 1731
+      },
+      {
+        "name": "Metal Stars",
+        "blockmap_size": 1133
+      }
+    ]
+  },
+  {
+    "world_file": "L3-1",
+    "levels": [
+      {
+        "name": "Lasers and Enemies",
+        "blockmap_size": 1109
+      },
+      {
+        "name": "Unidirectional Fight",
+        "blockmap_size": 1518
+      },
+      {
+        "name": "Powerslide",
+        "blockmap_size": 824
+      }
+    ]
+  },
+  {
+    "world_file": "L4-1",
+    "levels": [
+      {
+        "name": "The Wall",
+        "blockmap_size": 1751
+      },
+      {
+        "name": "Mr. Walker's Factory",
+        "blockmap_size": 1699
+      }
+    ]
+  },
+  {
+    "world_file": "L5-1",
+    "levels": [
+      {
+        "name": "Alien Squeeze",
+        "blockmap_size": 2010
+      },
+      {
+        "name": "The Final Challenge",
+        "blockmap_size": 301
+      }
+    ]
+  }
+]

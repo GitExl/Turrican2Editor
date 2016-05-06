@@ -1,0 +1,114 @@
+{
+  "4": {
+    "type": {
+      "name": "Dragon",
+      "gfx": "dragon",
+      "gfx_index": 0,
+      "offset": [-8, -4]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "5": {
+    "type": {
+      "name": "Bomber",
+      "gfx": "bomber"
+    },
+    "subtypes": {
+      "0": {
+        "name": "Floor Arc",
+        "gfx_index": 2
+      },
+      "1": {
+        "name": "Ceiling Arc",
+        "gfx_index": 4
+      },
+      "2": {
+        "name": "Floor",
+        "gfx_index": 0
+      }
+    }
+  },
+
+  "6": {
+    "type": {
+      "name": "Missile",
+      "gfx": "fallmissile",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "7": {
+    "type": {
+      "name": "Hive",
+      "gfx": "hive",
+      "gfx_index": 0,
+      "offset": [-8, 0]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "8": {
+    "type": {
+      "name": "Mosquito",
+      "gfx": "mosquito",
+      "gfx_index": 1
+    },
+    "subtypes": {
+      "0": {
+        "name": "A"
+      },
+      "1": {
+        "name": "B"
+      }
+    }
+  },
+
+  "9": {
+    "type": {
+      "name": "Leaf",
+      "gfx": "l1leaf",
+        "gfx_index": 2
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "13": {
+    "type": {
+      "name": "Exit Sign",
+      "gfx": "l1exitsign"
+    },
+    "subtypes": {
+      "0": {
+        "name": "Down",
+        "gfx_index": 0
+      },
+      "1": {
+        "name": "Right",
+        "gfx": "l1exitsign",
+        "gfx_index": 1
+      }
+    }
+  },
+
+  "15": {
+    "type": {
+      "name": "Boss",
+      "gfx": "l11bosstop",
+      "gfx_index": 0,
+      "offset": [-128, 0]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  }
+}

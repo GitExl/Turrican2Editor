@@ -1,0 +1,123 @@
+{
+  "3": {
+    "type": {
+      "name": "Missler",
+      "gfx": "missler1",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {
+        "name": "Regular"
+      },
+      "1": {
+        "name": "Wave"
+      },
+      "2": {
+        "name": "Down",
+        "gfx": "missler2",
+        "gfx_index": 0
+      }
+    }
+  },
+
+  "4": {
+    "type": {
+      "name": "Gunman",
+      "gfx": "gunman",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "5": {
+    "type": {
+      "name": "Ball",
+      "gfx": "droneball",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "6": {
+    "type": {
+      "name": "Gun",
+      "gfx": "gunplace"
+    },
+    "subtypes": {
+      "0": {
+        "name": "Top",
+        "gfx_index": 3
+      },
+      "1": {
+        "name": "Bottom",
+        "gfx_index": 1
+      }
+    }
+  },
+
+  "7": {
+    "type": {
+      "name": "Copter",
+      "gfx": "copter",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "8": {
+    "type": {
+      "name": "Big gun",
+      "gfx": "biggun"
+    },
+    "subtypes": {
+      "0": {
+        "name": "SE",
+        "gfx_index": 3,
+        "offset": [0, 2]
+      },
+      "1": {
+        "name": "NE",
+        "gfx_index": 1,
+        "offset": [1, -4]
+      },
+      "2": {
+        "name": "SW",
+        "gfx_index": 2
+      },
+      "3": {
+        "name": "NW",
+        "gfx_index": 0,
+        "offset": [0, 1]
+      }
+    }
+  },
+
+  "9": {
+    "type": {
+      "name": "Drone",
+      "gfx": "dronespiked",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "15": {
+    "type": {
+      "name": "Boss",
+      "gfx": "l32boss",
+      "gfx_index": 1,
+      "offset": [0, -64]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  }
+}

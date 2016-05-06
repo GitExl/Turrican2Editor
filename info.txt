@@ -1,0 +1,329 @@
+L5-1
+6512, data for 21 platforms
+
+Y-32   ?      X-8  Speed
+00 0B  00 00  15   FF
+00 14  00 00  21   07
+00 19  00 00  0E   07
+00 1F  00 00  15   04
+00 26  00 08  0E   00
+00 26  00 00  1D   05
+00 33  00 00  0D   05
+00 33  00 00  15   09
+00 3B  00 00  0E   04
+00 3D  00 00  1D   07
+00 42  00 00  14   05
+00 4D  00 00  1F   07
+00 58  00 00  1D   02
+00 5F  00 10  17   02
+00 6B  00 00  1D   07
+00 6D  00 00  0D   07
+00 7A  00 00  14   0A
+00 80  00 00  1E   05
+00 89  00 00  0D   08
+00 91  00 00  11   05
+00 91  00 00  19   05
+
+
+
+L1-1
+
+162
+Pointers to enemy behaviour code.
+Pointed to by level._offset_pointers_u1
+index + 3 = entity type index
+
+Level 1-1
+0   00 02 32 00  3   Walker
+1   00 02 28 BC  4   Dragon
+2   00 02 39 5C  5   Bomber
+3   00 02 3C E8  6   Falling missile
+4   00 02 36 84  7   Hive
+5   00 02 37 5C  8   Mosquito
+6   00 02 3F 16  9   Leaf
+7   00 02 2F 40  10  Power block
+8   00 00 00 00
+9   00 00 00 00
+10  00 02 69 04  13  Exit sign
+11  00 00 00 00
+12  00 02 41 68  15  Boss
+
+Level 1-2
+0   00 02 32 00  3   Walker
+1   00 02 5A 1E  4   Vines
+2   00 02 4E 62  5   Airstrike
+3   00 02 50 D4  6   Tiny eye
+4   00 02 66 4C  7   Fish
+5   00 02 53 36  8   Meatpile
+6   00 02 56 28  9   Sphere spitter
+7   00 02 2F 40  10  Power block
+8   00 00 00 00
+9   00 00 00 00
+10  00 00 00 00
+11  00 02 62 E2  14  Boss 1
+12  00 02 5C 04  15  Boss 2
+
+Level 2-1
+0   00 00 00 00
+1   00 02 2B 76  4  Spike
+2   00 02 2D CC  5  Bug
+3   00 02 30 FE  6  Gripper
+4   00 00 00 00
+5   00 02 35 76  8  Underwater enemies
+6   00 00 00 00
+7   00 02 32 CE  10 Power block
+8   00 00 00 00
+9   00 00 00 00  12 Placed in level where water starts, but null here? Maybe unused.
+10  00 00 00 00
+11  00 02 69 14  14 Exit sign
+12  00 02 3A 90  15 Boss
+
+Level 2-2
+0   00 02 4F 7E  3  Mine
+1   00 02 46 6A  4  Platform
+2   00 00 00 00
+3   00 00 00 00
+4   00 00 00 00
+5   00 02 49 B6  8  Ejector
+6   00 02 4D 8C  9  Lasergun
+7   00 02 32 CE  10 Power block
+8   00 00 00 00
+9   00 02 5B 08  12 Katakis
+10  00 00 00 00
+11  00 02 69 14  14 Exit sign
+12  00 02 5B 94  15 Boss
+
+Level 3-1
+0   00 02 46 CA  3 Egg
+1   00 02 48 4E  4 Turret
+2   00 02 4A 30  5 Roller
+3   00 02 4B 8E  6 Triangler
+4   00 02 4E 14  7 Rocket
+5   00 02 4F 46  8 Blob
+6   00 02 51 44  9 Boss
+7   00 00 00 00
+8   00 00 00 00
+9   00 00 00 00
+10  00 00 00 00
+11  00 00 00 00
+12  00 00 00 00
+
+Level 3-2
+0   00 02 5D F2  3 Missler
+1   00 02 60 F6  4 Gunman
+2   00 02 5B 30  5 Ball
+3   00 02 59 AC  6 Gun
+4   00 02 56 E0  7 Copter
+5   00 02 58 0E  8 Big gun
+6   00 02 6D C8  9 Drone
+7   00 00 00 00
+8   00 00 00 00
+9   00 00 00 00
+10  00 00 00 00
+11  00 00 00 00
+12  00 02 63 DC  15 Boss
+
+Level 3-3
+0   00 00 00 00
+1   00 00 00 00
+2   00 00 00 00
+3   00 00 00 00
+4   00 00 00 00
+5   00 00 00 00
+6   00 00 00 00
+7   00 00 00 00
+8   00 00 00 00
+9   00 00 00 00
+10  00 00 00 00
+11  00 00 00 00
+12  00 02 70 96  15 End sequence + boss
+
+Level 4-1
+0   00 02 39 08  3 Firewalker
+1   00 02 35 1C  4 Ejector
+2   00 00 00 00  5 Cut entity, maybe code for it still exists though? But no graphics?
+3   00 02 43 84  6 Power block
+4   00 00 00 00  7 Start boss music\sequence? Placed but invisible. Maybe unused.
+5   00 00 00 00
+6   00 00 00 00
+7   00 00 00 00
+8   00 00 00 00
+9   00 00 00 00
+10  00 00 00 00
+11  00 02 53 2A  14 Exit sign
+12  00 02 46 12  15 Boss
+
+Level 4-2
+0   00 02 30 96  3 Walker
+1   00 02 39 08  4 Firewalker
+2   00 02 3A CA  5 Crusher
+3   00 02 3F 24  6 Cog
+4   00 02 41 3C  7 Emitter
+5   00 02 3C 76  8 Flywalker
+6   00 02 43 84  9 Power block
+7   00 00 00 00
+8   00 00 00 00
+9   00 00 00 00
+10  00 00 00 00
+11  00 02 53 2A  14 Exit sign
+12  00 02 4F 84  15 Megawalker boss
+
+Level 5-1
+0   00 02 23 D8  3 Chunk spitter
+1   00 02 47 D0  4 Spitter chunk
+2   00 02 30 10  5 Handeye
+3   00 02 29 26  6 Pod
+4   00 02 33 9C  7 Alien spitter
+5   00 02 2D AC  8 Bouncer
+6   00 02 49 C0  9 Alien gripper
+7   00 02 35 F0  10 Power block
+8   00 00 00 00
+9   00 02 51 78  12 Music change
+10  00 02 38 7E  13 Exit sign
+11  00 00 00 00
+12  00 00 00 00
+
+Level 5-2
+0   00 00 00 00
+1   00 02 4F 64  4 Emitter
+2   00 02 4D 82  5 Red gun
+3   00 00 00 00
+4   00 00 00 00
+5   00 00 00 00
+6   00 00 00 00
+7   00 00 00 00
+8   00 00 00 00
+9   00 00 00 00
+10  00 00 00 00
+11  00 02 38 E2  14 Lift, spawned in code (see 6512)
+12  00 02 3B F6  15 The Machine
+
+
+11008
+Walker behaviour code
+
+11760
+Walker sprite data
+Start of some info, after some code
+00 01 F0 4C
+
+00 04 4
+00 03 3
+00 02 2
+00 01 1
+00 01 1
+00 00 0
+00 00 0
+FF FF -1
+FF FF -1
+FF FE -2
+FF FD -3
+FF FC -4
+FF FB -5
+00 08 8
+00 08 8
+00 08 8
+00 07 7
+00 06 6
+00 05 5
+00 04 4
+00 03 3
+00 02 2
+00 01 1
+00 00 0
+00 00 0
+00 00 0
+00 00 0
+00 00 0
+00 00 0
+00 00 0
+FF FF -1
+FF FE -2
+FF FD -3
+FF FC -4
+FF FB -5
+FF FA -6
+FF F9 -7
+FF F8 -8
+FF F8 -8
+FF F8 -8
+00 00 0
+00 01 1
+00 02 2
+00 03 3
+00 08 8
+00 04 4
+00 05 5
+00 06 6
+00 07 7
+00 09 9
+
+11912
+Walker sprite data
+8 frames
+offset x  offset y  ?      ?
+00 03     00 02     00 14  00 12
+00 03     00 01     00 13  00 12
+00 03     00 02     00 14  00 12
+00 03     00 01     00 13  00 12
+00 01     00 02     00 14  00 12
+00 02     00 01     00 13  00 11
+00 01     00 02     00 14  00 12
+00 01     00 01     00 14  00 12
+
+11864
+Walker sprite data pointers
+12 absolute pointers to sprite data
+00 02 35 C8 -> 0
+00 02 35 D6 -> 1
+00 02 35 E4 -> 2
+00 02 35 F2 -> 3
+00 02 36 00 -> 4
+00 02 36 0E -> 5
+00 02 36 1C -> 6
+00 02 36 2A -> 7
+00 02 36 38 -> 8
+00 02 36 50 -> A
+00 02 36 68 -> B
+00 02 36 76 -> C
+
+11990
+Sprite data
+
+Image  = Image data (4bpp)
+Mask   = Mask data (1bpp)
+?      = ?
+Cycles = cycles needed for drawing the sprite's full height
+Height = Height in pixels
+?      = ? End of sequence?
+
+walking left + right
+   image        mask         ?      cycles?  height ?
+0  00 04 15 04  00 04 16 54  00 BA  05 43    15     00
+1  00 04 16 A8  00 04 17 F8  00 BA  05 43    15     00
+2  00 04 18 4C  00 04 19 9C  00 BA  05 43    15     00
+3  00 04 19 F0  00 04 1B 40  00 BA  05 43    15     00
+4  00 04 1B 94  00 04 1C E4  00 BA  05 43    15     00
+5  00 04 1D 38  00 04 1E 88  00 BA  05 43    15     00
+6  00 04 1E DC  00 04 20 2C  00 BA  05 43    15     00
+7  00 04 20 80  00 04 21 D0  00 BA  05 43    15     00
+8  00 04 19 F0  00 04 1B 40  00 BA  05 43    15     01 FF F6  (1, -10)
+
+00 04 1B 3C
+00 04 1B 90
+
+upside down in wind
+   image        mask                cycles?  height ?
+A  00 04 20 80  00 04 21 D0  00 BA  05 43    15     01  FF F6 (1, -10)
+
+00 04 21 CC
+00 04 22 20
+
+squished
+   image        mask                cycles?  height ?
+B  00 04 22 24  00 04 23 04  00 BA  03 83    0E     00
+C  00 04 23 3C  00 04 24 1C  00 BA  03 83    0E     00
+
+12164
+Hive behaviour code
+...

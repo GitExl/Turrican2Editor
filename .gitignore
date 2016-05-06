@@ -107,3 +107,11 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# App
+.idea
+*.exe
+*.dll
+build
+gamedata*
+releases

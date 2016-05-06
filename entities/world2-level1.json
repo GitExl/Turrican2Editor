@@ -1,0 +1,99 @@
+{
+  "4": {
+    "type": {
+      "name": "Spike",
+      "gfx": "spikepillar",
+      "gfx_index": 1,
+      "offset": [0, -51]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "5": {
+    "type": {
+      "name": "Bug",
+      "gfx": "bug",
+      "gfx_index": 0,
+      "offset": [8, 0]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "6": {
+    "type": {
+      "name": "Gripper",
+      "gfx": "gripper",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "8": {
+    "type": {
+      "name": "Underwater"
+    },
+    "subtypes": {
+      "0": {
+        "name": "RoboFish",
+        "gfx": "robofishsmall",
+        "gfx_index": 0,
+        "offset": [0, -8]
+      },
+      "1": {
+        "name": "Jellyfish",
+        "gfx": "jellyfish",
+        "gfx_index": 2
+      },
+      "2": {
+        "name": "Swimmer",
+        "gfx": "swimmer",
+        "gfx_index": 0
+      },
+      "3": {
+        "name": "Big RoboFish",
+        "gfx": "robofish",
+        "gfx_index": 0
+      }
+    }
+  },
+
+  "12": {
+    "type": {
+      "name": "Transition",
+      "gfx": "fontbig",
+      "gfx_index": 30
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "14": {
+    "type": {
+      "name": "Exit sign",
+      "gfx": "l2exitsign",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "15": {
+    "type": {
+      "name": "Boss",
+      "gfx": "l21bosslook",
+      "gfx_index": 0,
+      "offset": [-132, -85]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  }
+}

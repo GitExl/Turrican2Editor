@@ -1,0 +1,113 @@
+{
+  "3": {
+    "type": {
+      "name": "Walker",
+      "gfx": "l4walker",
+      "gfx_index": 0,
+      "offset": [0, 2]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "4": {
+    "type": {
+      "name": "Firewalker",
+      "gfx": "fire",
+      "gfx_index": 4,
+      "offset": [-16, 0]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "5": {
+    "type": {
+      "name": "Crusher",
+      "gfx": "crushspikes",
+      "gfx_index": 0,
+      "offset": [-8, 0]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "6": {
+    "type": {
+      "name": "Cog",
+      "gfx": "cog",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "7": {
+    "type": {
+      "name": "Emitter",
+      "gfx": "l4emitter",
+      "gfx_index": 2,
+      "offset": [0, 4]
+    },
+    "subtypes": {
+      "0": {},
+      "1": {
+        "name": "floating",
+        "offset": [0, 0]
+      }
+    }
+  },
+
+  "8": {
+    "type": {
+      "name": "Flywalker",
+      "gfx": "flywalker",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {},
+      "1": {
+        "name": "Emitter",
+        "gfx_index": 2
+      }
+    }
+  },
+
+  "9": {
+    "type": {
+      "name": "Power Block",
+      "gfx": "l4powerblock",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "14": {
+    "type": {
+      "name": "Exit Right",
+      "gfx": "l4exitsign",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "15": {
+    "type": {
+      "name": "Megawalker",
+      "gfx": "bigwalker",
+      "gfx_index": 0,
+      "offset": [0, -80]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  }
+}

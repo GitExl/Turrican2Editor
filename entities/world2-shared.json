@@ -1,0 +1,12 @@
+{
+	"10": {
+    "type": {
+  		"name": "Power Block",
+  		"gfx": "l2powerblock",
+  		"gfx_index": 0
+    },
+		"subtypes": {
+			"0": {}
+		}
+	}
+}

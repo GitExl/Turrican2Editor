@@ -1,0 +1,106 @@
+{
+  "4": {
+    "type": {
+      "name": "Vines",
+      "gfx": "vines",
+      "gfx_index": 3,
+      "offset": [0, -8]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "5": {
+    "type": {
+      "name": "Airstrike",
+      "gfx": "airstrike",
+      "gfx_index": 0,
+      "offset": [0, -16]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "6": {
+    "type": {
+      "name": "Tiny Eye",
+      "gfx": "tinyeye",
+      "gfx_index": 0,
+      "offset": [1, 3]
+    },
+    "subtypes": {
+      "0": {
+        "name": "A"
+      },
+      "9": {
+        "name": "B"
+      }
+    }
+  },
+
+  "7": {
+    "type": {
+      "name": "Fish",
+      "gfx": "fish",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {
+        "name": "A"
+      },
+      "2": {
+        "name": "B"
+      }
+    }
+  },
+
+  "8": {
+    "type": {
+      "name": "Meatpile",
+      "gfx": "meatpile",
+      "gfx_index": 1,
+      "offset": [0, -34]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "9": {
+    "type": {
+      "name": "Sphere spitter",
+      "gfx": "sphere",
+      "gfx_index": 0,
+      "offset": [0, 0]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "14": {
+    "type": {
+      "name": "Boss 1",
+      "gfx": "l12boss1",
+      "gfx_index": 0,
+      "offset": [128, -96]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "15": {
+    "type": {
+      "name": "Boss 2",
+      "gfx": "l12boss2",
+      "gfx_index": 0,
+      "offset": [0, -148]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  }
+}

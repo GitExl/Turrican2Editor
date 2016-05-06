@@ -1,0 +1,56 @@
+{
+  "4": {
+    "type": {
+      "name": "Emitter",
+      "gfx": "l5emitter",
+      "gfx_index": 2,
+      "offset": [0, 4]
+    },
+    "subtypes": {
+      "0": {},
+      "1": {
+        "name": "floating",
+        "offset": [0, 0]
+      }
+    }
+  },
+
+  "5": {
+    "type": {
+      "name": "Red Gun",
+      "gfx": "redgun"
+    },
+    "subtypes": {
+      "0": {
+        "name": "left",
+        "gfx_index": 2
+      },
+      "1": {
+        "name": "right",
+        "gfx_index": 0
+      }
+    }
+  },
+
+  "14": {
+    "type": {
+      "name": "Lift",
+      "gfx": "lift",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "15": {
+    "type": {
+      "name": "The Machine",
+      "gfx": "machine",
+      "gfx_index": 2
+    },
+    "subtypes": {
+      "0": {}
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "3": {
+    "type": {
+      "name": "Firewalker",
+      "gfx": "fire",
+      "gfx_index": 4,
+      "offset": [-16, 0]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "4": {
+    "type": {
+      "name": "Ejector",
+      "gfx": "ejector",
+      "gfx_index": 0,
+      "offset": [-4, 0]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "5": {
+    "type": {
+      "name": "Follower (cut)",
+      "gfx": "spaceprojectile",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "6": {
+    "type": {
+      "name": "Power Block",
+      "gfx": "l4powerblock",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "7": {
+    "type": {
+      "name": "Start boss?",
+      "gfx": "fontbig",
+      "gfx_index": 30
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "14": {
+    "type": {
+      "name": "Exit Right",
+      "gfx": "l4exitsign",
+      "gfx_index": 0
+    },
+    "subtypes": {
+      "0": {}
+    }
+  },
+
+  "15": {
+    "type": {
+      "name": "Boss",
+      "gfx": "l41bosstop",
+      "gfx_index": 0,
+      "offset": [-24, -64]
+    },
+    "subtypes": {
+      "0": {}
+    }
+  }
+}

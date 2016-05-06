@@ -1,0 +1,12 @@
+{
+  "15": {
+    "type": {
+      "name": "End sequence",
+      "gfx": "fontbig",
+      "gfx_index": 30
+    },
+    "subtypes": {
+      "0": {}
+    }
+  }
+}
