@@ -137,8 +137,9 @@ class World(object):
         # Read level data.
         for level_index, level in enumerate(self._levels):
             if level_index > 0:
+                game_dir = os.path.dirname(filename)
                 level_file = 'L{}-{}'.format(self._world_index + 1, level_index + 1)
-                level_file = os.path.join('gamedata', level_file)
+                level_file = os.path.join(game_dir, level_file)
                 stream.insert(level_file, level.data_offset)
 
             if self._world_index == 2 and level_index == 1:

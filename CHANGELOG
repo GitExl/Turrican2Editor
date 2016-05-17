@@ -1,2 +1,5 @@
+Version 1.0.1
+- Fixed: some levels would not load correctly if the game data path was not ./gamedata
+
 Version 1.0.0
-* Initial release.
+- Initial release.
