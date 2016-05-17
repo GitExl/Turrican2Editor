@@ -4,9 +4,9 @@ set app_description=A level editor for Turrican II CDTV.
 set app_name=Turrican II Editor
 set app_name_lower=turrican2editor
 
-set app_version=1.0.0
-set app_version_value=1.0.0
-set app_version_title=1.0.0
+set app_version=1.0.1
+set app_version_value=1.0.1
+set app_version_title=1.0.1
 
 set build_path=".\build\exe.win32-2.7"
 
