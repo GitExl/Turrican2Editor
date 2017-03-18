@@ -78,7 +78,11 @@ class Tilemap(object):
 
         for y in range(start_y, end_y):
             for x in range(start_x, end_x):
-                index = self._tiles[x + y * self._width]
+                offset = x + y * self._width
+                if offset >= len(self._tiles):
+                    continue
+                    
+                index = self._tiles[offset]
                 if index >= len(tileset.tiles):
                     continue
 

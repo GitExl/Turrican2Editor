@@ -398,6 +398,7 @@ class FrameMain(FrameMainBase):
         self.update_status()
         self.update_title()
 
+        self.Layout()
         self.Viewport.Refresh(False)
 
     def center_on_start(self):
