@@ -140,7 +140,7 @@ class Surface(object):
 
     @classmethod
     def from_png(cls, filename):
-        ptr = surfaceReadFromPNG(filename)
+        ptr = surfaceReadFromPNG(filename.encode())
         if not ptr:
             raise Exception('Could not read Surface object from PNG "{}".'.format(filename))
 
@@ -155,7 +155,7 @@ class Surface(object):
         return Surface(surface_ptr)
 
     def write_to_png(self, filename):
-        return surfaceWriteToPNG(filename)
+        return surfaceWriteToPNG(filename.encode())
 
     def extract(self, surface_dest, x, y):
         surfaceExtract(self._surface, surface_dest.pointer, x, y)
@@ -173,7 +173,7 @@ class Surface(object):
         renderLine(self._surface, x1, y1, x2, y2, color)
 
     def text(self, font, x, y, text, color):
-        renderText(self._surface, font.pointer, x, y, text, color)
+        renderText(self._surface, font.pointer, x, y, text.encode(), color)
 
     def box(self, x, y, width, height, color):
         renderBox(self._surface, x, y, width, height, color)

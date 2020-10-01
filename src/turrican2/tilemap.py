@@ -101,13 +101,13 @@ class Tilemap(object):
                     continue
 
                 tile = tileset.tiles[index]
-                rx = pos_x + x * Tilemap.TILE_SIZE
-                ry = pos_y + y * Tilemap.TILE_SIZE
+                rx = int(pos_x + x * Tilemap.TILE_SIZE)
+                ry = int(pos_y + y * Tilemap.TILE_SIZE)
 
                 if collision:
                     surface.blit(tile.surface_collision, rx, ry)
                 else:
-                    surface.blit(tile.surface, rx ,ry)
+                    surface.blit(tile.surface, rx, ry)
 
     def put_from(self, other, put_x, put_y):
         other_tiles = other.tiles

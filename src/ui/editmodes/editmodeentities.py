@@ -29,7 +29,7 @@ from renderlib.surface import BlendOp
 
 from turrican2.level import Level
 
-from editmode import EditMode
+from ui.editmodes.editmode import EditMode
 
 
 class State(object):
@@ -93,7 +93,7 @@ class EditModeEntities(EditMode):
             self._state = State.SELECT
             self._select_start = self.get_entity_position()
             self._select_end = self.get_entity_position()
-            self._frame.set_viewport_cursor(wx.CURSOR_CROSS)
+            self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_CROSS))
 
     def mouse_left_up(self):
 
@@ -105,7 +105,7 @@ class EditModeEntities(EditMode):
             self.select_entities()
 
             self._state = State.NONE
-            self._frame.set_viewport_cursor(wx.CURSOR_DEFAULT)
+            self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_DEFAULT))
             self._frame.refresh_viewport()
 
         # Entity move state.
@@ -152,9 +152,9 @@ class EditModeEntities(EditMode):
             x, y = self.get_entity_position()
             self._entity_hover = self._level.get_entity_at(x, y)
             if self._entity_hover:
-                self._frame.set_viewport_cursor(wx.CURSOR_HAND)
+                self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_HAND))
             else:
-                self._frame.set_viewport_cursor(wx.CURSOR_DEFAULT)
+                self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_DEFAULT))
 
     def paint(self, surface, camera, graphics):
         control = wx.GetKeyState(wx.WXK_CONTROL)
@@ -208,8 +208,8 @@ class EditModeEntities(EditMode):
         self._frame.update_status()
 
     def get_entity_position(self):
-        x = self._mouse_position[0] / Level.ORIGIN_SIZE
-        y = self._mouse_position[1] / Level.ORIGIN_SIZE
+        x = int(self._mouse_position[0] / Level.ORIGIN_SIZE)
+        y = int(self._mouse_position[1] / Level.ORIGIN_SIZE)
 
         return x, y
 

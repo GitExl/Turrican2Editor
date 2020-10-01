@@ -86,7 +86,7 @@ class EntityPicker(wx.Panel):
         self._entities = []
 
         templates = level.get_entity_templates()
-        for keys, template in templates.iteritems():
+        for keys, template in templates.items():
             src_surface = self._graphics.get_surfaces(template.gfx)[template.gfx_index]
 
             src_rect = src_surface.get_used_rectangle()
@@ -94,8 +94,8 @@ class EntityPicker(wx.Panel):
             src_height = src_rect.y2 - src_rect.y1
 
             surface = src_surface.empty(ICON_WIDTH, ICON_HEIGHT)
-            x = ICON_WIDTH / 2 - src_width / 2 - src_rect.x1
-            y = ICON_HEIGHT / 2 - src_height / 2 - src_rect.y1
+            x = int(ICON_WIDTH / 2 - src_width / 2 - src_rect.x1)
+            y = int(ICON_HEIGHT / 2 - src_height / 2 - src_rect.y1)
 
             surface.blit_blend(src_surface, x, y, BlendOp.ALPHA_SIMPLE)
 
@@ -127,7 +127,7 @@ class EntityPicker(wx.Panel):
 
             surface.box_fill(0, y, surface.width, ICON_HEIGHT, color, BlendOp.SOLID)
             surface.blit_blend(entity.surface, 0, y, BlendOp.ALPHA_SIMPLE)
-            surface.text(self._font, ICON_WIDTH + 6, y + ICON_HEIGHT / 2 - 3, entity.name, color_text)
+            surface.text(self._font, ICON_WIDTH + 6, int(y + ICON_HEIGHT / 2 - 3), entity.name, color_text)
 
             y += ICON_HEIGHT + ICON_SPACING
 
@@ -139,7 +139,7 @@ class EntityPicker(wx.Panel):
 
     def mouse_wheel(self, event):
         position = self.Scrollbar.GetThumbPosition()
-        position -= (event.GetWheelRotation() / 20) * ICON_HEIGHT
+        position -= int(event.GetWheelRotation() / 20) * ICON_HEIGHT
         self.Scrollbar.SetThumbPosition(position)
 
         self.Viewport.Refresh(False)
@@ -148,8 +148,8 @@ class EntityPicker(wx.Panel):
         if not self._entities:
             return
 
-        y = (event.GetPosition()[1] / config.SCALE) + self.Scrollbar.GetThumbPosition()
-        index = y / (ICON_HEIGHT + ICON_SPACING)
+        y = int((event.GetPosition()[1] / config.SCALE) + self.Scrollbar.GetThumbPosition())
+        index = int(y / (ICON_HEIGHT + ICON_SPACING))
         self._selected_index = index
 
         self.Viewport.Refresh(False)
@@ -170,7 +170,7 @@ class EntityPicker(wx.Panel):
                 self.set_template()
 
                 item_height = ICON_HEIGHT + ICON_SPACING
-                y = self._selected_index * item_height + (item_height / 2) - (self._presenter.surface.height / 2)
+                y = self._selected_index * item_height + int(item_height / 2) - int(self._presenter.surface.height / 2)
                 self.Scrollbar.SetThumbPosition(y)
 
                 break

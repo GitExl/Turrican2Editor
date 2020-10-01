@@ -22,11 +22,8 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import json
-import math
 
-from collections import OrderedDict
-
-from tilemap import Tilemap
+from turrican2.tilemap import Tilemap
 
 
 LEVEL_BASE_OFFSET = 0x20700
@@ -97,7 +94,7 @@ class Level(object):
 
         self._tilemap = None
         self._entities = []
-        self._entity_templates = OrderedDict()
+        self._entity_templates = {}
 
         self._tilemap_width = 0
         self._tilemap_height = 0
@@ -122,7 +119,7 @@ class Level(object):
 
     def load_entity_templates(self, filename):
         with open(filename, 'r') as fp:
-            data = json.load(fp, object_pairs_hook=OrderedDict)
+            data = json.load(fp)
 
         for type_key, data in data.items():
             type_key = int(type_key)

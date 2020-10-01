@@ -119,7 +119,7 @@ class StreamWrite(object):
 
     @classmethod
     def from_file(cls, filename, endianness=Endianness.LITTLE):
-        ptr = streamWriteCreateFromFile(filename)
+        ptr = streamWriteCreateFromFile(filename.encode())
         if not ptr:
             raise Exception('Could not create a StreamWrite object from file "{}".'.format(filename))
 
@@ -128,7 +128,7 @@ class StreamWrite(object):
         return cls(ptr)
 
     def write_to_file(self, filename):
-        if not streamWriteToFile(self._stream, filename):
+        if not streamWriteToFile(self._stream, filename.encode()):
             raise Exception('Could not write StreamWrite object to file "{}".'.format(filename))
 
     def write_uint(self, data):

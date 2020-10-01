@@ -21,6 +21,8 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import math
+
 from renderlib.bitplane import Bitplane, MaskMode, BitplaneType
 from renderlib.surface import Surface, BlendOp
 
@@ -59,7 +61,7 @@ class Tile(object):
                 raise Exception('Unknown tile collision value {}.'.format(value))
 
             x = (index % 4) * 8
-            y = (index / 4) * 8
+            y = int(index / 4) * 8
             self.surface_collision.box_fill(x, y, 8, 8, color, BlendOp.ALPHA50)
 
 
@@ -72,7 +74,7 @@ class TileSet(object):
     def from_stream(cls, stream, offset_gfx, offset_collision, palette):
 
         stream.seek(offset_gfx)
-        tile_count = stream.read_uint() / 4
+        tile_count = int(stream.read_uint() / 4)
 
         stream.seek(offset_gfx)
         tile_offsets = []

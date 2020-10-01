@@ -151,7 +151,7 @@ class TileSelector(wx.Panel):
             return
 
         position = self.Scrollbar.GetThumbPosition()
-        position -= (event.GetWheelRotation() / 20) * Tilemap.TILE_SIZE
+        position -= int(event.GetWheelRotation() / 20) * Tilemap.TILE_SIZE
         self.Scrollbar.SetThumbPosition(position)
 
         self.Viewport.Refresh(False)
@@ -216,11 +216,11 @@ class TileSelector(wx.Panel):
         self.Viewport.Refresh(False)
 
     def get_tile_position(self, pos):
-        x = pos[0] / self._presenter.scale
-        y = pos[1] / self._presenter.scale
+        x = int(pos[0] / self._presenter.scale)
+        y = int(pos[1] / self._presenter.scale)
         x, y = self._camera.camera_to_world(x, y)
-        x /= Tilemap.TILE_SIZE
-        y /= Tilemap.TILE_SIZE
+        x = int(x / Tilemap.TILE_SIZE)
+        y = int(y / Tilemap.TILE_SIZE)
 
         return x, y
 

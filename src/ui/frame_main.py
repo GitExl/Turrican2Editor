@@ -46,7 +46,7 @@ from turrican2.tilemap import Tilemap
 from turrican2.graphics import Graphics
 from turrican2.level import Level
 
-from camera import Camera
+from ui.camera import Camera
 
 import config
 
@@ -284,7 +284,7 @@ class FrameMain(FrameMainBase):
             return
 
         self._mouse_state = MouseState.MOVE
-        self.Viewport.SetCursor(wx.StockCursor(wx.CURSOR_SIZING))
+        self.Viewport.SetCursor(wx.Cursor(wx.CURSOR_SIZING))
         self._move_last_pos = event.GetPosition()
 
     def viewport_mouse_right_up(self, event):
@@ -294,7 +294,7 @@ class FrameMain(FrameMainBase):
             return
 
         self._mouse_state = MouseState.NONE
-        self.Viewport.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+        self.Viewport.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
 
     def viewport_mouse_move(self, event):
         if not self._camera:
@@ -437,8 +437,8 @@ class FrameMain(FrameMainBase):
         editmode.undo_restore_item(item['data'])
 
     def undo_store_item(self):
-        value_index = self._edit_modes.values().index(self._edit_mode)
-        edit_mode_key = self._edit_modes.keys()[value_index]
+        value_index = list(self._edit_modes.values()).index(self._edit_mode)
+        edit_mode_key = list(self._edit_modes.keys())[value_index]
 
         return {
             'editmode': edit_mode_key,
@@ -490,7 +490,7 @@ class FrameMain(FrameMainBase):
         self.Viewport.Refresh(False)
 
     def set_viewport_cursor(self, stock_cursor):
-        self.Viewport.SetCursor(wx.StockCursor(stock_cursor))
+        self.Viewport.SetCursor(wx.Cursor(stock_cursor))
 
     def selection_tile(self, event):
         self._edit_modes[EditMode.TILES].set_selection(event.selection)

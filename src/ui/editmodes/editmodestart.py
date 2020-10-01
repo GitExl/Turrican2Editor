@@ -25,7 +25,7 @@ import wx
 
 from renderlib.surface import BlendOp
 
-from editmode import EditMode
+from ui.editmodes.editmode import EditMode
 
 from turrican2.tilemap import Tilemap
 
@@ -113,13 +113,13 @@ class EditModeStart(EditMode):
             if self._level.camera_tile_x < 1:
                 self._level.camera_tile_x = 1
             elif self._level.camera_tile_x * Tilemap.TILE_SIZE + CAMERA_WIDTH >= x_max:
-                self._level.camera_tile_x = self._level.tilemap.width - CAMERA_WIDTH / Tilemap.TILE_SIZE - 1
+                self._level.camera_tile_x = int(self._level.tilemap.width - CAMERA_WIDTH / Tilemap.TILE_SIZE - 1)
 
             y_max = self._level.tilemap.height * Tilemap.TILE_SIZE - 32
             if self._level.camera_tile_y < 1:
                 self._level.camera_tile_y = 1
             elif self._level.camera_tile_y * Tilemap.TILE_SIZE + CAMERA_HEIGHT >= y_max:
-                self._level.camera_tile_y = self._level.tilemap.height - CAMERA_HEIGHT / Tilemap.TILE_SIZE - 1
+                self._level.camera_tile_y = int(self._level.tilemap.height - CAMERA_HEIGHT / Tilemap.TILE_SIZE - 1)
 
             self._frame.set_level_modified(True)
 
@@ -142,9 +142,9 @@ class EditModeStart(EditMode):
                 self._highlight_player = True
 
             if self._highlight_camera or self._highlight_player:
-                self._frame.set_viewport_cursor(wx.CURSOR_SIZING)
+                self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_SIZING))
             else:
-                self._frame.set_viewport_cursor(wx.CURSOR_DEFAULT)
+                self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_DEFAULT))
 
     def paint(self, surface, camera, graphics):
         x = self._level.camera_tile_x * Tilemap.TILE_SIZE
@@ -156,8 +156,8 @@ class EditModeStart(EditMode):
             color = COLOR_CAMERA
         surface.box(x, y, CAMERA_WIDTH - 1, CAMERA_HEIGHT - 1, color)
 
-        x += self._level.player_x
-        y += self._level.player_y
+        x = int(x + self._level.player_x)
+        y = int(y + self._level.player_y)
         if self._highlight_player:
             color = COLOR_HIGHLIGHT
         else:

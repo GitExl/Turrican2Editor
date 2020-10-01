@@ -29,7 +29,7 @@ from renderlib.surface import BlendOp
 
 from turrican2.tilemap import Tilemap
 
-from editmode import EditMode
+from ui.editmodes.editmode import EditMode
 
 
 class State(object):
@@ -71,7 +71,7 @@ class EditModeTiles(EditMode):
             self._select_start = self.get_tile_position()
             self._select_end = self.get_tile_position()
             self._select_type = SelectType.SELECT
-            self._frame.set_viewport_cursor(wx.CURSOR_CROSS)
+            self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_CROSS))
 
         # Enter fill state.
         elif control and self._selection:
@@ -79,7 +79,7 @@ class EditModeTiles(EditMode):
             self._select_start = self.get_tile_position()
             self._select_end = self.get_tile_position()
             self._select_type = SelectType.FILL
-            self._frame.set_viewport_cursor(wx.CURSOR_CROSS)
+            self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_CROSS))
 
         # Draw with the current selection.
         else:
@@ -99,7 +99,7 @@ class EditModeTiles(EditMode):
                     self._frame.set_level_modified(True)
 
             self._state = State.NONE
-            self._frame.set_viewport_cursor(wx.CURSOR_DEFAULT)
+            self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_DEFAULT))
 
         elif self._state == State.DRAW:
             self._state = State.NONE
@@ -145,17 +145,17 @@ class EditModeTiles(EditMode):
         if not self._selection:
             return None, None
 
-        x = self._mouse_position[0] - ((self._selection.width - 1) * Tilemap.TILE_SIZE) / 2
-        y = self._mouse_position[1] - ((self._selection.height - 1) * Tilemap.TILE_SIZE) / 2
+        x = int(self._mouse_position[0] - ((self._selection.width - 1) * Tilemap.TILE_SIZE) / 2)
+        y = int(self._mouse_position[1] - ((self._selection.height - 1) * Tilemap.TILE_SIZE) / 2)
 
-        x = (x / Tilemap.TILE_SIZE) * Tilemap.TILE_SIZE
-        y = (y / Tilemap.TILE_SIZE) * Tilemap.TILE_SIZE
+        x = int(x / Tilemap.TILE_SIZE) * Tilemap.TILE_SIZE
+        y = int(y / Tilemap.TILE_SIZE) * Tilemap.TILE_SIZE
 
         return x, y
 
     def get_tile_position(self):
-        x = self._mouse_position[0] / Tilemap.TILE_SIZE
-        y = self._mouse_position[1] / Tilemap.TILE_SIZE
+        x = int(self._mouse_position[0] / Tilemap.TILE_SIZE)
+        y = int(self._mouse_position[1] / Tilemap.TILE_SIZE)
 
         return x, y
 

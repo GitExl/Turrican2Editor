@@ -64,7 +64,7 @@ class Font(object):
         :param filename: the filename of the PNG file to create the font from.
         :return: a new Font object.
         """
-        ptr = fontLoad(filename);
+        ptr = fontLoad(filename.encode())
         if not ptr:
             raise Exception('Could not load Font object from PNG file "{}".'.format(filename))
 

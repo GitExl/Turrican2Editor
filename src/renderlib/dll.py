@@ -23,4 +23,4 @@
 
 from ctypes import CDLL
 
-dll = CDLL('renderlib')
+dll = CDLL('./renderlib')

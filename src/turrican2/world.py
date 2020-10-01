@@ -29,8 +29,8 @@ from renderlib.stream_read import StreamRead, Endianness
 from renderlib.stream_write import StreamWrite
 from renderlib.palette import Palette
 
-from tileset import TileSet
-from level import Level
+from turrican2.tileset import TileSet
+from turrican2.level import Level
 
 
 WORLD_BASE_OFFSET = 0x20700

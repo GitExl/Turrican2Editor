@@ -126,7 +126,7 @@ class StreamRead(object):
         :param endianness: the endianness of the stream reader.
         :return: a new stream reader.
         """
-        ptr = streamReadCreateFromFile(filename)
+        ptr = streamReadCreateFromFile(filename.encode())
         if not ptr:
             raise Exception('Could not create a StreamRead object from file "{}".'.format(filename))
 
@@ -214,7 +214,7 @@ class StreamRead(object):
         :param filename: the filename of the data to insert.
         :param offset: the offset to insert the data at.
         """
-        streamReadInsert(self._stream, filename, offset)
+        streamReadInsert(self._stream, filename.encode(), offset)
 
     @property
     def pointer(self):

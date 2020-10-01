@@ -41,8 +41,8 @@ If you want to play your modified level, you can do so using WinUAE if the C, DE
 * Configure any other settings as you see fit.
 
 ## Building
-The Turrican II Editor was written in Python 2 and C. Together with wxWidgets, Python is used for the UI and game data reading\writing. The "renderlib" C component is used for 2D rendering and bitstream reading\writing.
+The Turrican II Editor was written in Python 3 and C. Together with wxWidgets, Python is used for the UI and game data reading\writing. The "renderlib" C component is used for 2D rendering and bitstream reading\writing.
 
-To run the editor you will need Python 2.7 or higher, and wxPython 3.0. Execute src/main.py from the program's root directory to start.
+To run the editor you will need a 32 bit version of Python 3.8 or higher, and wxPython 4.1 or higher. Execute src/main.py from the program's root directory to start.
 
-To build the "renderlib" component you will need GCC and Win32 header files. A basic MinGW installation will provide these. Running the makefile should be sufficient to build a renderlib.dll file in the program's root directory.
+To build the "renderlib" component you will need GCC and Win32 header files, as well as libpng. A basic MinGW installation will provide most of these. Running the makefile should be sufficient to build a renderlib.dll file in the program's root directory.
