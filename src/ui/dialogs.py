@@ -351,7 +351,7 @@ class DialogAboutBase ( wx.Dialog ):
 		self.Ok = wx.Button( self.Panel, wx.ID_ANY, u"Ok", wx.DefaultPosition, wx.DefaultSize, 0 )
 
 		self.Ok.SetDefault()
-		SizerButton.Add( self.Ok, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+		SizerButton.Add( self.Ok, 0, wx.ALL, 5 )
 
 
 		SizerC1.Add( SizerButton, 0, wx.EXPAND, 5 )
