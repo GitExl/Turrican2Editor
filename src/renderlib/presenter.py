@@ -32,7 +32,7 @@ __all__ = ['Presenter']
 
 
 presenterCreate = dll.presenterCreate
-presenterCreate.argtypes = [c_uint32, c_uint8]
+presenterCreate.argtypes = [c_uint32, c_uint]
 presenterCreate.restype = c_void_p
 
 presenterDestroy = dll.presenterDestroy
@@ -40,12 +40,12 @@ presenterDestroy.argtypes = [c_void_p]
 presenterDestroy.restype = None
 
 presenterSetScale = dll.presenterSetScale
-presenterSetScale.argtypes = [c_void_p, c_uint8]
+presenterSetScale.argtypes = [c_void_p, c_uint]
 presenterSetScale.restype = None
 
 presenterGetScale = dll.presenterGetScale
 presenterGetScale.argtypes = [c_void_p]
-presenterGetScale.restype = c_uint8
+presenterGetScale.restype = c_uint
 
 presenterResize = dll.presenterResize
 presenterResize.argtypes = [c_void_p]

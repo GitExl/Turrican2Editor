@@ -22,19 +22,26 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import math
+from typing import List
+
+from renderlib.stream_read import StreamRead
+from renderlib.stream_write import StreamWrite
+from renderlib.surface import Surface
+from turrican2.tileset import TileSet
+from ui.camera import Camera
 
 
-class Tilemap(object):
+class Tilemap:
 
     TILE_SIZE = 32
 
-    def __init__(self, tiles, width, height):
-        self._tiles = tiles
-        self._width = width
-        self._height = height
+    def __init__(self, tiles: List[int], width: int, height: int):
+        self._tiles: List[int] = tiles
+        self._width: int = width
+        self._height: int = height
 
     @classmethod
-    def from_stream(cls, stream, width, height):
+    def from_stream(cls, stream: StreamRead, width: int, height: int):
         tiles = [0] * width * height
 
         for x in range(0, width):
@@ -44,7 +51,7 @@ class Tilemap(object):
         return cls(tiles, width, height)
 
     @classmethod
-    def from_tilemap(cls, other, x1, y1, x2, y2):
+    def from_tilemap(cls, other, x1: int, y1: int, x2: int, y2: int):
         other_tiles = other.tiles
 
         width = x2 - x1
@@ -62,19 +69,19 @@ class Tilemap(object):
 
         return cls(tiles, width, height)
 
-    def write_to(self, stream):
+    def write_to(self, stream: StreamWrite):
         for x in range(0, self._width):
             for y in range(0, self._height):
                 stream.write_ubyte(self._tiles[x + y * self._width])
 
-    def render(self, surface, camera, tileset, collision=False):
-        start_x = int(math.floor(camera.x / Tilemap.TILE_SIZE))
-        start_y = int(math.floor(camera.y / Tilemap.TILE_SIZE))
-        end_x = int(math.floor((camera.x + camera.width) / Tilemap.TILE_SIZE)) + 1
-        end_y = int(math.floor((camera.y + camera.height) / Tilemap.TILE_SIZE)) + 1
+    def render(self, surface: Surface, camera: Camera, tileset: TileSet, collision=False):
+        start_x: int = int(math.floor(camera.x / Tilemap.TILE_SIZE))
+        start_y: int = int(math.floor(camera.y / Tilemap.TILE_SIZE))
+        end_x: int = int(math.floor((camera.x + camera.width) / Tilemap.TILE_SIZE)) + 1
+        end_y: int = int(math.floor((camera.y + camera.height) / Tilemap.TILE_SIZE)) + 1
 
-        end_x = min(end_x, self._width)
-        end_y = min(end_y, self._height)
+        end_x: int = min(end_x, self._width)
+        end_y: int = min(end_y, self._height)
 
         for y in range(start_y, end_y):
             for x in range(start_x, end_x):
@@ -93,7 +100,7 @@ class Tilemap(object):
                 else:
                     surface.blit(tile.surface, tile_x, tile_y)
 
-    def render_all(self, surface, tileset, pos_x, pos_y, collision=False):
+    def render_all(self, surface: Surface, tileset: TileSet, pos_x: int, pos_y: int, collision: bool=False):
         for y in range(0, self._height):
             for x in range(0, self._width):
                 index = self._tiles[x + y * self._width]
@@ -109,7 +116,7 @@ class Tilemap(object):
                 else:
                     surface.blit(tile.surface, rx, ry)
 
-    def put_from(self, other, put_x, put_y):
+    def put_from(self, other, put_x: int, put_y: int):
         other_tiles = other.tiles
 
         for y in range(0, other.height):
@@ -123,7 +130,7 @@ class Tilemap(object):
                 dest = put_x + x + (put_y + y) * self._width
                 self._tiles[dest] = other_tiles[src]
 
-    def fill_with(self, other, x1, y1, x2, y2):
+    def fill_with(self, other, x1: int, y1: int, x2: int, y2: int):
         other_tiles = other.tiles
         other_x = 0
         other_y = 0
@@ -150,17 +157,17 @@ class Tilemap(object):
         self._tiles = []
 
     @property
-    def tiles(self):
+    def tiles(self) -> List[int]:
         return self._tiles
 
     @tiles.setter
-    def tiles(self, tiles):
+    def tiles(self, tiles: List[int]):
         self._tiles = tiles
 
     @property
-    def width(self):
+    def width(self) -> int:
         return self._width
 
     @property
-    def height(self):
+    def height(self) -> int:
         return self._height

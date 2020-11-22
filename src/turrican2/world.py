@@ -22,6 +22,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os.path
+from typing import Dict, List, Optional
 
 import wx
 
@@ -33,79 +34,79 @@ from turrican2.tileset import TileSet
 from turrican2.level import Level
 
 
-WORLD_BASE_OFFSET = 0x20700
+class World:
 
-
-class World(object):
+    BASE_OFFSET = 0x20700
 
     def __init__(self):
-        self._filename = None
-        self._world_index = 0
+        self._filename: Optional[str] = None
+        self._world_index: int = 0
 
-        self._offset_tile_gfx = 0
-        self._offset_tile_collision = 0
-        self._offset_palette = 0
-        self._offset_u1 = 0
-        self._offset_u2 = 0
-        self._level_offsets = None
+        self._offset_tile_gfx: int = 0
+        self._offset_tile_collision: int = 0
+        self._offset_palette: int = 0
+        self._offset_u1: int = 0
+        self._offset_u2: int = 0
+        self._level_offsets: Optional[List[int]] = None
 
-        self._levels = None
-        self._palette = None
-        self._tileset = None
-        self._sprites = None
+        self._levels: Optional[List[Level]] = None
+        self._palette: Optional[Palette] = None
+        self._tileset: Optional[TileSet] = None
+        # self._sprites = None
 
     def save(self):
         stream = StreamWrite.from_file(self._filename, Endianness.BIG)
         levels_not_saved = 0
 
         for level_index, level in enumerate(self._levels):
-            if level.modified:
+            if not level.modified:
+                continue
 
-                if not level.can_save():
-                    levels_not_saved += 1
-                    continue
+            if not level.can_save():
+                levels_not_saved += 1
+                continue
 
-                # Write entities first.
-                level.write_entities(stream)
+            # Write entities first.
+            level.write_entities(stream)
 
-                # Save level data.
-                if level_index == 0:
-                    level.save(stream)
+            # Save level data.
+            if level_index == 0:
+                level.save(stream)
+            else:
+                filename = 'L{}-{}'.format(self._world_index + 1, level_index + 1)
+                game_dir = os.path.dirname(self._filename)
+                filename = os.path.join(game_dir, filename)
+
+                level_stream = StreamWrite.from_file(filename, Endianness.BIG)
+
+                if self._world_index == 2 and level_index == 1:
+                    offset = 19620
                 else:
-                    filename = 'L{}-{}'.format(self._world_index + 1, level_index + 1)
-                    game_dir = os.path.dirname(self._filename)
-                    filename = os.path.join(game_dir, filename)
+                    offset = 0
+                level.save(level_stream, offset)
+                level_stream.write_to_file(filename)
 
-                    level_stream = StreamWrite.from_file(filename, Endianness.BIG)
-
-                    if self._world_index == 2 and level_index == 1:
-                        offset = 19620
-                    else:
-                        offset = 0
-                    level.save(level_stream, offset)
-                    level_stream.write_to_file(filename)
-
-                # Save level header.
-                stream.seek(self._level_offsets[level_index])
-                level.save_header(stream)
-                level.modified = False
+            # Save level header.
+            stream.seek(self._level_offsets[level_index])
+            level.save_header(stream)
+            level.modified = False
 
         stream.write_to_file(self._filename)
 
         if levels_not_saved:
             wx.MessageBox('{} level(s) could not be saved.'.format(levels_not_saved), 'Levels not saved', wx.ICON_INFORMATION | wx.OK)
 
-    def load(self, filename, data):
+    def load(self, filename: str, data: Dict):
         self._filename = filename
         self._world_index = int(os.path.basename(filename)[1]) - 1
 
         stream = StreamRead.from_file(filename, Endianness.BIG)
 
-        self._offset_tile_gfx = stream.read_uint() - WORLD_BASE_OFFSET
-        self._offset_tile_collision = stream.read_uint() - WORLD_BASE_OFFSET
-        self._offset_palette = stream.read_uint() - WORLD_BASE_OFFSET
-        self._offset_u1 = stream.read_uint() - WORLD_BASE_OFFSET
-        self._offset_u2 = stream.read_uint() - WORLD_BASE_OFFSET
+        self._offset_tile_gfx = stream.read_uint() - World.BASE_OFFSET
+        self._offset_tile_collision = stream.read_uint() - World.BASE_OFFSET
+        self._offset_palette = stream.read_uint() - World.BASE_OFFSET
+        self._offset_u1 = stream.read_uint()
+        self._offset_u2 = stream.read_uint()    # Point to music?
 
         if self._offset_tile_gfx > stream.size or self._offset_tile_collision > stream.size or self._offset_palette > stream.size:
             raise Exception('"{}" is not a valid world file.'.format(filename))
@@ -114,7 +115,7 @@ class World(object):
         level_count = stream.read_ushort()
         self._level_offsets = []
         for _ in range(0, level_count):
-            self._level_offsets.append(stream.read_uint() - WORLD_BASE_OFFSET)
+            self._level_offsets.append(stream.read_uint() - World.BASE_OFFSET)
 
         # Read level headers.
         self._levels = []
@@ -150,9 +151,9 @@ class World(object):
             level.load(stream, offset)
 
     @property
-    def levels(self):
+    def levels(self) -> List[Level]:
         return self._levels
 
     @property
-    def tileset(self):
+    def tileset(self) -> TileSet:
         return self._tileset

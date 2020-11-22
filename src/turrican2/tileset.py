@@ -21,25 +21,27 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import math
+from typing import List, Optional
 
 from renderlib.bitplane import Bitplane, MaskMode, BitplaneType
-from renderlib.surface import Surface, BlendOp
+from renderlib.palette import Palette
+from renderlib.stream_read import StreamRead
+from renderlib.surface import BlendOp, Surface
 
 
-class CollisionType(object):
+class CollisionType:
     SOLID = 1
     DESTRUCTABLE = 127
     SECRET = 128
     HURT = 211
 
 
-class Tile(object):
+class Tile:
 
     def __init__(self):
-        self.surface = None
-        self.surface_collision = None
-        self.collision = None
+        self.surface: Optional[Surface] = None
+        self.surface_collision: Optional[Surface] = None
+        self.collision: Optional[List[int]] = None
 
     def render_collision(self):
         self.surface_collision = self.surface.clone()
@@ -65,13 +67,13 @@ class Tile(object):
             self.surface_collision.box_fill(x, y, 8, 8, color, BlendOp.ALPHA50)
 
 
-class TileSet(object):
+class TileSet:
 
-    def __init__(self, tiles):
-        self._tiles = tiles
+    def __init__(self, tiles: List[Tile]):
+        self._tiles: List[Tile] = tiles
 
     @classmethod
-    def from_stream(cls, stream, offset_gfx, offset_collision, palette):
+    def from_stream(cls, stream: StreamRead, offset_gfx: int, offset_collision: int, palette: Palette):
 
         stream.seek(offset_gfx)
         tile_count = int(stream.read_uint() / 4)
@@ -104,5 +106,5 @@ class TileSet(object):
         return cls(tiles)
 
     @property
-    def tiles(self):
+    def tiles(self) -> List[Tile]:
         return self._tiles

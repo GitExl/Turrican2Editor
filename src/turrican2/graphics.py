@@ -23,27 +23,29 @@
 
 import json
 import os.path
+from typing import Dict, List
 
 from renderlib.stream_read import StreamRead, Endianness
 from renderlib.palette import Palette
 from renderlib.bitplane import Bitplane, BitplaneType, MaskMode
+from renderlib.surface import Surface
 
 
-class Graphics(object):
+class Graphics:
 
-    def __init__(self, directory):
-        self.graphics = {}
+    def __init__(self, directory: str):
+        self.graphics: Dict[str, List[Surface]] = {}
         self.load_graphics('graphics.json', directory)
 
-    def get_surfaces(self, name):
+    def get_surfaces(self, name: str) -> List[Surface]:
         return self.graphics.get(name, None)
 
-    def load_graphics(self, json_filename, directory):
+    def load_graphics(self, json_filename: str, directory: str):
         with open(json_filename, 'r') as fp:
             data = json.load(fp)
 
         # Read palettes.
-        palettes = {}
+        palettes: Dict[str, Palette] = {}
         for filename, file_data in data.items():
             filename = os.path.join(directory, filename)
             stream = StreamRead.from_file(filename, Endianness.BIG)
@@ -75,7 +77,7 @@ class Graphics(object):
                     raise Exception('Unknown bitplane mode "{}".'.format(gfx['mode']))
 
                 # Read all bitplanes in order.
-                surfaces = []
+                surfaces: List[Surface] = []
                 stream.seek(gfx['offset'])
                 for _ in range(0, count):
                     bitplane = Bitplane.from_stream(stream, mode, width, height, planes)
@@ -103,4 +105,3 @@ class Graphics(object):
                     self.graphics[gfx['name']].extend(surfaces)
                 else:
                     self.graphics[gfx['name']] = surfaces
-

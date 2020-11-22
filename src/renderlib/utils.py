@@ -30,11 +30,11 @@ __all__ = ['create_bgra', 'create_rgba', 'swap_rgba']
 
 
 createBGRA = dll.createBGRA
-createBGRA.argtypes = [c_uint8, c_uint8, c_uint8, c_uint8]
+createBGRA.argtypes = [c_ubyte, c_ubyte, c_ubyte, c_ubyte]
 createBGRA.restype = c_uint32
 
 createRGBA = dll.createRGBA
-createRGBA.argtypes = [c_uint8, c_uint8, c_uint8, c_uint8]
+createRGBA.argtypes = [c_ubyte, c_ubyte, c_ubyte, c_ubyte]
 createRGBA.restype = c_uint32
 
 swapRGBA = dll.swapRGBA
@@ -44,10 +44,10 @@ swapRGBA.restype = c_uint32
 
 class Rectangle(Structure):
     _fields_ = [
-        ("x1", c_int32),
-        ("y1", c_int32),
-        ("x2", c_int32),
-        ("y2", c_int32)
+        ("x1", c_int),
+        ("y1", c_int),
+        ("x2", c_int),
+        ("y2", c_int)
     ]
 
 

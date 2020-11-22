@@ -31,7 +31,7 @@ __all__ = ['Bitplane', 'MaskMode', 'BitplaneType']
 
 
 bitplaneCreateFromStream = dll.bitplaneCreateFromStream
-bitplaneCreateFromStream.argtypes = [c_void_p, c_uint8, c_uint32, c_uint32, c_uint8]
+bitplaneCreateFromStream.argtypes = [c_void_p, c_uint, c_uint, c_uint, c_uint]
 bitplaneCreateFromStream.restype = c_void_p
 
 bitplaneDestroy = dll.bitplaneDestroy
@@ -39,7 +39,7 @@ bitplaneDestroy.argtypes = [c_void_p]
 bitplaneDestroy.restype = None
 
 bitplaneToSurface = dll.bitplaneToSurface
-bitplaneToSurface.argtypes = [c_void_p, c_void_p, c_void_p, c_uint32, c_int32, c_uint32]
+bitplaneToSurface.argtypes = [c_void_p, c_void_p, c_void_p, c_uint, c_int, c_uint]
 bitplaneToSurface.restype = c_void_p
 
 

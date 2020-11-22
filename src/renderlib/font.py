@@ -31,11 +31,11 @@ __all__ = ['Font']
 
 fontGetCharWidth = dll.fontGetCharWidth
 fontGetCharWidth.argtypes = [c_void_p]
-fontGetCharWidth.restype = c_uint32
+fontGetCharWidth.restype = c_uint
 
 fontGetCharHeight = dll.fontGetCharHeight
 fontGetCharHeight.argtypes = [c_void_p]
-fontGetCharHeight.restype = c_uint32
+fontGetCharHeight.restype = c_uint
 
 fontLoad = dll.fontLoad
 fontLoad.argtypes = [c_char_p]

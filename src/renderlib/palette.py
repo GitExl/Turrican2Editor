@@ -30,7 +30,7 @@ __all__ = ['Palette']
 
 
 paletteReadFromStream = dll.paletteReadFromStream
-paletteReadFromStream.argtypes = [c_void_p, c_uint8, c_uint8, c_bool]
+paletteReadFromStream.argtypes = [c_void_p, c_uint, c_uint, c_bool]
 paletteReadFromStream.restype = c_void_p
 
 paletteDestroy = dll.paletteDestroy

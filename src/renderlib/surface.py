@@ -37,14 +37,14 @@ surfaceFlipY.restype = c_void_p
 
 surfaceGetWidth = dll.surfaceGetWidth
 surfaceGetWidth.argtypes = [c_void_p]
-surfaceGetWidth.restype = c_uint32
+surfaceGetWidth.restype = c_uint
 
 surfaceGetHeight = dll.surfaceGetHeight
 surfaceGetHeight.argtypes = [c_void_p]
-surfaceGetHeight.restype = c_uint32
+surfaceGetHeight.restype = c_uint
 
 surfaceWriteToPNG = dll.surfaceWriteToPNG
-surfaceWriteToPNG.argtypes = [c_void_p, c_char_p, c_uint8]
+surfaceWriteToPNG.argtypes = [c_void_p, c_char_p, c_uint]
 surfaceWriteToPNG.restype = c_bool
 
 surfaceReadFromPNG = dll.surfaceReadFromPNG
@@ -52,7 +52,7 @@ surfaceReadFromPNG.argtypes = [c_char_p]
 surfaceReadFromPNG.restype = c_void_p
 
 surfaceCreate = dll.surfaceCreate
-surfaceCreate.argtypes = [c_uint32, c_uint32]
+surfaceCreate.argtypes = [c_uint, c_uint]
 surfaceCreate.restype = c_void_p
 
 surfaceDestroy = dll.surfaceDestroy
@@ -60,11 +60,11 @@ surfaceDestroy.argtypes = [c_void_p]
 surfaceDestroy.restype = None
 
 surfaceExtract = dll.surfaceExtract
-surfaceExtract.argtypes = [c_void_p, c_void_p, c_int32, c_int32]
+surfaceExtract.argtypes = [c_void_p, c_void_p, c_int, c_int]
 surfaceExtract.restype = None
 
 surfaceFill = dll.surfaceFill
-surfaceFill.argtypes = [c_void_p, c_uint32]
+surfaceFill.argtypes = [c_void_p, c_uint]
 surfaceFill.restype = None
 
 surfaceClear = dll.surfaceClear
@@ -81,35 +81,35 @@ surfaceUsedRect.restype = Rectangle
 
 # Render functions.
 renderOutline = dll.renderOutline
-renderOutline.argtypes = [c_void_p, c_void_p, c_int32, c_int32, c_uint32]
+renderOutline.argtypes = [c_void_p, c_void_p, c_int, c_int, c_uint]
 renderOutline.restype = None
 
 renderLine = dll.renderLine
-renderLine.argtypes = [c_void_p, c_int32, c_int32, c_int32, c_int32, c_uint32]
+renderLine.argtypes = [c_void_p, c_int, c_int, c_int, c_int, c_uint]
 renderLine.restype = None
 
 renderText = dll.renderText
-renderText.argtypes = [c_void_p, c_void_p, c_int32, c_int32, c_char_p, c_uint32]
+renderText.argtypes = [c_void_p, c_void_p, c_int, c_int, c_char_p, c_uint]
 renderText.restype = None
 
 renderBox = dll.renderBox
-renderBox.argtypes = [c_void_p, c_int32, c_int32, c_int32, c_int32, c_uint32]
+renderBox.argtypes = [c_void_p, c_int, c_int, c_int, c_int, c_uint]
 renderBox.restype = None
 
 renderBlit = dll.renderBlit
-renderBlit.argtypes = [c_void_p, c_void_p, c_int32, c_int32]
+renderBlit.argtypes = [c_void_p, c_void_p, c_int, c_int]
 renderBlit.restype = None
 
 renderBoxFill = dll.renderBoxFill
-renderBoxFill.argtypes = [c_void_p, c_int32, c_int32, c_int32, c_int32, c_uint32, c_uint8]
+renderBoxFill.argtypes = [c_void_p, c_int, c_int, c_int, c_int, c_uint, c_uint8]
 renderBoxFill.restype = None
 
 renderBlitBlend = dll.renderBlitBlend
-renderBlitBlend.argtypes = [c_void_p, c_void_p, c_int32, c_int32, c_uint8]
+renderBlitBlend.argtypes = [c_void_p, c_void_p, c_int, c_int, c_uint8]
 renderBlitBlend.restype = None
 
 renderBlitBlendScale = dll.renderBlitBlendScale
-renderBlitBlendScale.argtypes = [c_void_p, c_void_p, c_int32, c_int32, c_int32, c_int32, c_uint8]
+renderBlitBlendScale.argtypes = [c_void_p, c_void_p, c_int, c_int, c_int, c_int, c_uint8]
 renderBlitBlendScale.restype = None
 
 

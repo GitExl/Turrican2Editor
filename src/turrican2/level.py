@@ -22,46 +22,47 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import json
+from typing import Dict, List, Optional, Tuple
 
+from renderlib.stream_read import StreamRead
+from renderlib.stream_write import StreamWrite
 from turrican2.tilemap import Tilemap
+from ui.camera import Camera
 
 
-LEVEL_BASE_OFFSET = 0x20700
+class Entity:
+
+    def __init__(self, entity_type: int, entity_subtype: int):
+        self.type: int = entity_type
+        self.subtype: int = entity_subtype
+        self.x: int = 0
+        self.y: int = 0
+        self.selected: bool = False
 
 
-class Entity(object):
+class EntityTemplate:
 
-    def __init__(self, entity_type, entity_subtype):
-        self.type = entity_type
-        self.subtype = entity_subtype
-        self.x = 0
-        self.y = 0
-        self.selected = False
+    def __init__(self, name: str, type: int, subtype: int, data: Dict):
+        self.name: str = name
 
+        self.type: int = type
+        self.subtype: int = subtype
 
-class EntityTemplate(object):
-
-    def __init__(self, name, type, subtype, data):
-        self.name = name
-
-        self.type = type
-        self.subtype = subtype
-
-        self.gfx = data.get('gfx', 'fontsmall')
-        self.gfx_index = data.get('gfx_index', 0)
+        self.gfx: str = data.get('gfx', 'fontsmall')
+        self.gfx_index: int = data.get('gfx_index', 0)
 
         offset = data.get('offset', [0, 0])
-        self.offset_x = offset[0]
-        self.offset_y = offset[1]
+        self.offset_x: int = offset[0]
+        self.offset_y: int = offset[1]
 
 
-class Block(object):
+class Block:
 
     def __init__(self):
-        self.entities = []
-        self.offset = 0
+        self.entities: List[Tuple[int, int, int]] = []
+        self.offset: int = 0
 
-    def write(self, stream):
+    def write(self, stream: StreamWrite):
         for entity in self.entities:
             stream.write_ubyte(entity[0])
             stream.write_ubyte(entity[1])
@@ -69,55 +70,57 @@ class Block(object):
         stream.write_ubyte(0xFF)
 
 
-class Level(object):
+class Level:
 
-    ORIGIN_SIZE = 8
+    ORIGIN_SIZE: int = 8
 
-    def __init__(self, world_index, level_index):
-        self._world_index = world_index
-        self._level_index = level_index
-        self.name = 'Unnamed'
+    BASE_OFFSET: int = 0x20700
 
-        self.undo = []
-        self.undo_index = -1
+    def __init__(self, world_index: int, level_index: int):
+        self._world_index: int = world_index
+        self._level_index: int = level_index
+        self.name: str = 'Unnamed'
 
-        self._offset_level_data = 0
-        self._offset_code_1 = 0
-        self._offset_code_2 = 0
-        self._offset_code_3 = 0
-        self._offset_pointers_behaviour = 0
-        self._offset_blockmap_row_pointers = 0
-        self._offset_blockmap_pointers = 0
+        self.undo: List = []
+        self.undo_index: int = -1
 
-        self._u1 = 0
-        self._u2 = 0
+        self._offset_level_data: int = 0
+        self._offset_code_1: int = 0
+        self._offset_code_2: int = 0
+        self._offset_code_3: int = 0
+        self._offset_pointers_behaviour: int = 0
+        self._offset_blockmap_row_pointers: int = 0
+        self._offset_blockmap_pointers: int = 0
 
-        self._tilemap = None
-        self._entities = []
-        self._entity_templates = {}
+        self._u1: int = 0
+        self._u2: int = 0
 
-        self._tilemap_width = 0
-        self._tilemap_height = 0
+        self._tilemap: Optional[Tilemap] = None
+        self._entities: List[Entity] = []
+        self._entity_templates: Dict[Tuple[int, int], EntityTemplate] = {}
 
-        self.camera_tile_x = 0
-        self.camera_tile_y = 0
+        self._tilemap_width: int = 0
+        self._tilemap_height: int = 0
 
-        self.player_x = 0
-        self.player_y = 0
+        self.camera_tile_x: int = 0
+        self.camera_tile_y: int = 0
 
-        self._blockmap_width = 0
-        self._blockmap_height = 0
+        self.player_x: int = 0
+        self.player_y: int = 0
 
-        self.maximum_blockmap_size = 0
+        self._blockmap_width: int = 0
+        self._blockmap_height: int = 0
 
-        self.camera = None
-        self.modified = False
+        self.maximum_blockmap_size: int = 0
+
+        self.camera: Optional[Camera] = None
+        self.modified: bool = False
 
         self.load_entity_templates('entities/shared.json')
         self.load_entity_templates('entities/world{}-shared.json'.format(world_index + 1))
         self.load_entity_templates('entities/world{}-level{}.json'.format(world_index + 1, level_index + 1))
 
-    def load_entity_templates(self, filename):
+    def load_entity_templates(self, filename: str):
         with open(filename, 'r') as fp:
             data = json.load(fp)
 
@@ -145,7 +148,7 @@ class Level(object):
                 self._entity_templates[key] = EntityTemplate(name, type_key, subtype_key, merged_data)
 
     def save_header(self, stream):
-        stream.write_uint(self._offset_level_data + LEVEL_BASE_OFFSET)
+        stream.write_uint(self._offset_level_data + Level.BASE_OFFSET)
 
         stream.write_ushort(self._tilemap_width)
         stream.write_ushort(self._tilemap_height)
@@ -159,21 +162,21 @@ class Level(object):
         stream.write_ushort(self._blockmap_width - 1)
         stream.write_ushort(self._blockmap_height - 1)
 
-        stream.write_uint(self._offset_code_1 + LEVEL_BASE_OFFSET)
-        stream.write_uint(self._offset_code_2 + LEVEL_BASE_OFFSET)
+        stream.write_uint(self._offset_code_1 + Level.BASE_OFFSET)
+        stream.write_uint(self._offset_code_2 + Level.BASE_OFFSET)
 
         stream.write_ubyte(self._u1)
         stream.write_ubyte(0)
         stream.write_ubyte(0)
         stream.write_ubyte(0)
 
-        stream.write_uint(self._offset_pointers_behaviour + LEVEL_BASE_OFFSET)
-        stream.write_uint(self._offset_blockmap_row_pointers + LEVEL_BASE_OFFSET)
-        stream.write_uint(self._offset_blockmap_pointers + LEVEL_BASE_OFFSET)
+        stream.write_uint(self._offset_pointers_behaviour + Level.BASE_OFFSET)
+        stream.write_uint(self._offset_blockmap_row_pointers + Level.BASE_OFFSET)
+        stream.write_uint(self._offset_blockmap_pointers + Level.BASE_OFFSET)
 
         stream.write_ushort(self._u2)
 
-        stream.write_uint(self._offset_code_3 + LEVEL_BASE_OFFSET)
+        stream.write_uint(self._offset_code_3 + Level.BASE_OFFSET)
 
     def save(self, stream, offset=None):
         if offset is None:
@@ -183,7 +186,7 @@ class Level(object):
         self._tilemap.write_to(stream)
 
     def load_header(self, stream):
-        self._offset_level_data = stream.read_uint() - LEVEL_BASE_OFFSET
+        self._offset_level_data = stream.read_uint() - Level.BASE_OFFSET
 
         self._tilemap_width = stream.read_ushort()
         self._tilemap_height = stream.read_ushort()
@@ -197,29 +200,29 @@ class Level(object):
         self._blockmap_width = stream.read_ushort() + 1
         self._blockmap_height = stream.read_ushort() + 1
 
-        self._offset_code_1 = stream.read_uint() - LEVEL_BASE_OFFSET
-        self._offset_code_2 = stream.read_uint() - LEVEL_BASE_OFFSET
+        self._offset_code_1 = stream.read_uint() - Level.BASE_OFFSET
+        self._offset_code_2 = stream.read_uint() - Level.BASE_OFFSET
 
         self._u1 = stream.read_ubyte()
         stream.skip(3)
 
-        self._offset_pointers_behaviour = stream.read_uint() - LEVEL_BASE_OFFSET
+        self._offset_pointers_behaviour = stream.read_uint() - Level.BASE_OFFSET
 
-        self._offset_blockmap_row_pointers = stream.read_uint() - LEVEL_BASE_OFFSET
-        self._offset_blockmap_pointers = stream.read_uint() - LEVEL_BASE_OFFSET
+        self._offset_blockmap_row_pointers = stream.read_uint() - Level.BASE_OFFSET
+        self._offset_blockmap_pointers = stream.read_uint() - Level.BASE_OFFSET
 
         # Music track index? Modify and test.
         self._u2 = stream.read_ushort()
 
-        self._offset_code_3 = stream.read_uint() - LEVEL_BASE_OFFSET
+        self._offset_code_3 = stream.read_uint() - Level.BASE_OFFSET
 
-    def load(self, stream, offset=0):
+    def load(self, stream: StreamRead, offset: int=0):
         stream.seek(self._offset_level_data + offset)
         self._tilemap = Tilemap.from_stream(stream, self._tilemap_width, self._tilemap_height)
 
         self.read_entities(stream, self._offset_blockmap_pointers)
 
-    def write_entities(self, stream):
+    def write_entities(self, stream: StreamWrite):
 
         # Generate blockmap blocks and adjust width\height of the blockmap in the process.
         blocks = self.generate_blocks()
@@ -248,13 +251,13 @@ class Level(object):
         # Write block offsets.
         stream.seek(self._offset_blockmap_pointers)
         for index, block in enumerate(blocks):
-            stream.write_uint(LEVEL_BASE_OFFSET + block.offset)
+            stream.write_uint(Level.BASE_OFFSET + block.offset)
 
-    def generate_blocks(self):
+    def generate_blocks(self) -> List[Block]:
         self._blockmap_width, self._blockmap_height, block_width, block_height = self.get_blockmap_dimensions()
 
-        length = self._blockmap_width * self._blockmap_height
-        blocks = []
+        length: int = self._blockmap_width * self._blockmap_height
+        blocks: List[Block] = []
 
         for _ in range(0, length):
             blocks.append(Block())
@@ -311,13 +314,11 @@ class Level(object):
 
         return blocks
 
-    def read_entities(self, stream, offset_blockmap_pointers):
-        row_offsets = [0] * self._blockmap_height
+    def read_entities(self, stream: StreamRead, offset_blockmap_pointers: int):
+        row_offsets: List[int] = [0] * self._blockmap_height
         stream.seek(self._offset_blockmap_row_pointers)
         for row_index in range(0, self._blockmap_height):
             row_offsets[row_index] = stream.read_ushort()
-
-        #offset_set = set()
 
         block_y = 0
         for row_offset in row_offsets:
@@ -326,13 +327,12 @@ class Level(object):
             block_offsets = [0] * self._blockmap_width
             stream.seek(offset_blockmap_pointers + row_offset)
             for offset_index in range(0, self._blockmap_width):
-                block_offsets[offset_index] = stream.read_uint() - LEVEL_BASE_OFFSET
+                block_offsets[offset_index] = stream.read_uint() - Level.BASE_OFFSET
 
             # Each block contains a list of entities that are inside it.
             block_x = 0
             for offset in block_offsets:
                 stream.seek(offset)
-                #offset_set.add(offset)
 
                 while True:
                     value = stream.read_ubyte()
@@ -355,39 +355,26 @@ class Level(object):
 
             block_y += 1
 
-        # size = self._blockmap_width * self._blockmap_height * 4
-        # size += self._blockmap_height * 2
-        # for offset in offset_set:
-        #     stream.seek(offset)
-        #     while True:
-        #         value = stream.read_ubyte()
-        #         size += 1
-        #         if value == 0xFF:
-        #             break
-        #
-        #         stream.skip(2)
-        #         size += 2
-
-    def add_entity(self, template, x, y):
+    def add_entity(self, template: EntityTemplate, x: int, y: int):
         entity = Entity(template.type, template.subtype)
         entity.x = x
         entity.y = y
         self._entities.append(entity)
 
-    def remove_entity(self, entity):
+    def remove_entity(self, entity: Entity):
         self._entities.remove(entity)
 
-    def get_entity_template(self, entity_type, entity_subtype):
+    def get_entity_template(self, entity_type: int, entity_subtype: int) -> EntityTemplate:
         template = self._entity_templates.get((entity_type, entity_subtype), None)
         if not template:
             raise Exception('Unknown entity template {}, {}.'.format(entity_type, entity_subtype))
 
         return template
 
-    def get_entity_templates(self):
+    def get_entity_templates(self) -> Dict[Tuple[int, int], EntityTemplate]:
         return self._entity_templates
 
-    def get_entities_inside(self, x1, y1, x2, y2):
+    def get_entities_inside(self, x1: int, y1: int, x2: int, y2: int) -> List[Entity]:
         selected = []
 
         for entity in self._entities:
@@ -397,14 +384,14 @@ class Level(object):
 
         return selected
 
-    def get_entity_at(self, x, y):
+    def get_entity_at(self, x: int, y: int) -> Optional[Entity]:
         for entity in self._entities:
             if entity.x == x and entity.y == y:
                 return entity
 
         return None
 
-    def get_blockmap_dimensions(self):
+    def get_blockmap_dimensions(self) -> Tuple[int, int, float, float]:
         if self._tilemap.width <= 16:
             block_width = 512.0
         else:
@@ -416,15 +403,15 @@ class Level(object):
             block_height = 256.0
 
         # TODO: calculating these sizes doesn't work out for all levels, since some entities are positioned
-        # outside the block they are in, causing the original levels' blockmaps to be truncated in width or height.
-        # blockmap_width = int(math.ceil((self._tilemap_width * Tilemap.TILE_SIZE + 48) / block_width))
-        # blockmap_height = int(math.ceil((self._tilemap_height * Tilemap.TILE_SIZE) / block_height))
+        #  outside the block they are in, causing the original levels' blockmaps to be truncated in width or height.
+        #  blockmap_width = int(math.ceil((self._tilemap_width * Tilemap.TILE_SIZE + 48) / block_width))
+        #  blockmap_height = int(math.ceil((self._tilemap_height * Tilemap.TILE_SIZE) / block_height))
         blockmap_width = self._blockmap_width
         blockmap_height = self._blockmap_height
 
         return blockmap_width, blockmap_height, block_width, block_height
 
-    def calculate_blockmap_size(self):
+    def calculate_blockmap_size(self) -> int:
         blockmap_width, blockmap_height, block_width, block_height = self.get_blockmap_dimensions()
 
         length = blockmap_width * blockmap_height
@@ -497,12 +484,12 @@ class Level(object):
 
         return size
 
-    def get_entity_bytes_left(self):
+    def get_entity_bytes_left(self) -> int:
         size = self.calculate_blockmap_size()
         max_size = self.maximum_blockmap_size
         return max_size - size
 
-    def can_save(self):
+    def can_save(self) -> bool:
         bytes_left = self.get_entity_bytes_left()
         if bytes_left < 0:
             return False
@@ -510,17 +497,17 @@ class Level(object):
         return True
 
     @property
-    def tilemap(self):
+    def tilemap(self) -> Tilemap:
         return self._tilemap
 
     @property
-    def entities(self):
+    def entities(self) -> List[Entity]:
         return self._entities
 
     @entities.setter
-    def entities(self, entities):
+    def entities(self, entities: List[Entity]):
         self._entities = entities
 
     @property
-    def data_offset(self):
+    def data_offset(self) -> int:
         return self._offset_level_data
