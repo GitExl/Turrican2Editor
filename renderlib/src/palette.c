@@ -26,10 +26,11 @@
 #include "renderlib.h"
 #include "utils.h"
 #include "streamread.h"
+#include "bitplane.h"
 #include "palette.h"
 
 
-Palette* paletteCreate(const uint8_t length) {
+Palette* paletteCreate(const unsigned int length) {
   Palette* pal = calloc(1, sizeof(Palette));
   if (!pal) {
     return NULL;
@@ -37,6 +38,9 @@ Palette* paletteCreate(const uint8_t length) {
 
   pal->length = length;
   pal->entries = calloc(length, sizeof(uint32_t));
+  if (!pal->entries) {
+      return NULL;
+  }
 
   return pal;
 }
@@ -50,15 +54,15 @@ EXPORT void paletteDestroy(Palette* pal) {
   free(pal);
 }
 
-EXPORT Palette* paletteReadFromStream(StreamRead* stream, const uint8_t length, const uint8_t bits_per_channel, const bool read_alpha) {
+EXPORT Palette* paletteReadFromStream(StreamRead* stream, const unsigned int length, const unsigned int bits_per_channel, const bool read_alpha) {
   Palette* pal = paletteCreate(length);
   if (!pal) {
     return NULL;
   }
 
-  uint32_t value;
-  uint8_t a, r, g, b;
-  uint8_t index;
+  unsigned int value;
+  Pixel a, r, g, b;
+  unsigned int index;
 
   if (bits_per_channel == 8) {
     for (index = 0; index < length; index++) {

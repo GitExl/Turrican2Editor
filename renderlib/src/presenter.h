@@ -32,24 +32,24 @@ typedef struct {
   HWND hwnd;
 
   HBITMAP hbitmap;
-  uint32_t* data;
+  RGBA* data;
 
   HDC hbitmapdc;
   HDC htargetdc;
 
   Surface* surface;
 
-  uint8_t scale;
-  uint32_t width;
-  uint32_t height;
+  unsigned int scale;
+  unsigned int width;
+  unsigned int height;
 } Presenter;
 
-EXPORT Presenter* presenterCreate     (const HWND hwnd, const uint8_t scale);
-EXPORT void       presenterDestroy    (Presenter* presenter);
-EXPORT void       presenterSetScale   (Presenter* presenter, const uint8_t scale);
-EXPORT uint8_t    presenterGetScale   (Presenter* presenter);
-EXPORT void       presenterResize     (Presenter* presenter);
-EXPORT Surface*   presenterGetSurface (Presenter* presenter);
-EXPORT void       presenterPresent    (Presenter* presenter);
+EXPORT Presenter*   presenterCreate     (const HWND hwnd, const unsigned int scale);
+EXPORT void         presenterDestroy    (Presenter* presenter);
+EXPORT void         presenterSetScale   (Presenter* presenter, const unsigned int scale);
+EXPORT unsigned int presenterGetScale   (Presenter* presenter);
+EXPORT void         presenterResize     (Presenter* presenter);
+EXPORT Surface*     presenterGetSurface (Presenter* presenter);
+EXPORT void         presenterPresent    (Presenter* presenter);
 
 #endif

@@ -39,7 +39,7 @@
  *
  * @return        A new Bitplane or NULL if one could not be created.
  */
-Bitplane* bitplaneCreate(const uint32_t width, const uint32_t height, const uint8_t planes) {
+Bitplane* bitplaneCreate(const unsigned int width, const unsigned int height, const unsigned int planes) {
   if (planes > 7) {
     return NULL;
   }
@@ -52,7 +52,7 @@ Bitplane* bitplaneCreate(const uint32_t width, const uint32_t height, const uint
   bp->width = width;
   bp->height = height;
   bp->planes = planes;
-  bp->length = width * height * sizeof(uint8_t);
+  bp->length = width * height * sizeof(Pixel);
 
   bp->data = calloc(1, bp->length);
   if (!bp->data) {
@@ -73,11 +73,11 @@ Bitplane* bitplaneCreate(const uint32_t width, const uint32_t height, const uint
  *
  * @return        A new Bitplane or NULL if one could not be created.
  */
-Bitplane* bitplaneCreateAmigaSprite(StreamRead* stream, const uint32_t height) {
+Bitplane* bitplaneCreateAmigaSprite(StreamRead* stream, const unsigned int height) {
   Bitplane* bp = bitplaneCreate(32, height, 4);
 
-  uint32_t ix, plane, y, x;
-  int8_t shift = 7;
+  unsigned int ix, plane, y, x;
+  int shift = 7;
   uint8_t value = streamReadByte(stream);
 
   for (ix = 0; ix < 32; ix += 16) {
@@ -117,15 +117,15 @@ Bitplane* bitplaneCreateAmigaSprite(StreamRead* stream, const uint32_t height) {
  *
  * @return        A new Bitplane or NULL if one could not be created.
  */
-Bitplane* bitplaneCreatePlanar(StreamRead* stream, const uint32_t width, const uint32_t height, const uint8_t planes) {
+Bitplane* bitplaneCreatePlanar(StreamRead* stream, const unsigned int width, const unsigned int height, const unsigned int planes) {
   if (planes > 8) {
     return NULL;
   }
 
   Bitplane* bp = bitplaneCreate(width, height, planes);
 
-  uint32_t x, y, plane;
-  int8_t shift = 7;
+  unsigned int x, y, plane;
+  int shift = 7;
   uint8_t value = streamReadByte(stream);
 
   for (y = 0; y < height; y++) {
@@ -158,15 +158,15 @@ Bitplane* bitplaneCreatePlanar(StreamRead* stream, const uint32_t width, const u
  *
  * @return        A new Bitplane or NULL if one could not be created.
  */
-Bitplane* bitplaneCreateChunky(StreamRead* stream, const uint32_t width, const uint32_t height, const uint8_t planes) {
+Bitplane* bitplaneCreateChunky(StreamRead* stream, const unsigned int width, const unsigned int height, const unsigned int planes) {
   if (planes > 7) {
     return NULL;
   }
 
   Bitplane* bp = bitplaneCreate(width, height, planes);
 
-  uint32_t x, y, plane;
-  int8_t shift = 7;
+  unsigned int x, y, plane;
+  int shift = 7;
   uint8_t value = streamReadByte(stream);
 
   for (plane = 0; plane < planes; plane++) {
@@ -200,8 +200,8 @@ Bitplane* bitplaneCreateChunky(StreamRead* stream, const uint32_t width, const u
  *
  * @return        A new Bitplane or NULL if one could not be created.
  */
-EXPORT Bitplane* bitplaneCreateFromStream(StreamRead* stream, BitplaneType type, const uint32_t width, const uint32_t height,
-                                          const uint8_t planes) {
+EXPORT Bitplane* bitplaneCreateFromStream(StreamRead* stream, BitplaneType type, const unsigned int width, const unsigned int height,
+                                          const unsigned int planes) {
   if (!stream) {
     return NULL;
   }
@@ -243,7 +243,7 @@ EXPORT void bitplaneDestroy(Bitplane* bp) {
  * @return           A new Surface containing the converted Bitplane or NULL if it could not be converted.
  */
 EXPORT Surface* bitplaneToSurface(const Bitplane* bp, const Bitplane* mask, const Palette* palette,
-                                  const uint32_t maskColor, const int32_t shift, const MaskMode mode) {
+                                  const RGBA maskColor, const unsigned int shift, const MaskMode mode) {
   if (!bp) {
     return NULL;
   }
@@ -251,7 +251,7 @@ EXPORT Surface* bitplaneToSurface(const Bitplane* bp, const Bitplane* mask, cons
   Surface* surface = surfaceCreate(bp->width, bp->height);
 
   // Convert all Bitplane pixels to BGRA.
-  uint32_t pixel;
+  unsigned int pixel;
   for (pixel = 0; pixel < bp->length; pixel++) {
     surface->data[pixel] = palette->entries[bp->data[pixel] + shift] | 0xFF000000;
   }

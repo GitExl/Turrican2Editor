@@ -34,7 +34,7 @@
  *
  * @return      The character width in pixels.
  */
-EXPORT uint32_t fontGetCharWidth(const Font* font) {
+EXPORT unsigned int fontGetCharWidth(const Font* font) {
   return font->charWidth;
 }
 
@@ -45,7 +45,7 @@ EXPORT uint32_t fontGetCharWidth(const Font* font) {
  *
  * @return      The character height in pixels.
  */
-EXPORT uint32_t fontGetCharHeight(const Font* font) {
+EXPORT unsigned int fontGetCharHeight(const Font* font) {
   return font->charHeight;
 }
 

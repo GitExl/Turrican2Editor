@@ -27,11 +27,11 @@
 #define H_PALETTE
 
 typedef struct {
-  uint8_t length;
-  uint32_t* entries;
+  unsigned int length;
+  RGBA* entries;
 } Palette;
 
 EXPORT void     paletteDestroy        (Palette* pal);
-EXPORT Palette* paletteReadFromStream (StreamRead* stream, const uint8_t length, const uint8_t bits_per_channel, const bool read_alpha);
+EXPORT Palette* paletteReadFromStream (StreamRead* stream, const unsigned int length, const unsigned int bits_per_channel, const bool read_alpha);
 
 #endif

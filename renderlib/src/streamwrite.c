@@ -241,7 +241,8 @@ EXPORT bool streamWriteToFile(const StreamWrite* stream, const char* fileName) {
     return false;
   }
 
-  FILE* fp = fopen(fileName, "wb");
+  FILE* fp;
+  fopen_s(&fp, fileName, "wb");
   if (!fp) {
     return false;
   }
@@ -298,7 +299,8 @@ EXPORT StreamWrite* streamWriteCreateFromFile(const char* fileName) {
     return NULL;
   }
 
-  FILE* fp = fopen(fileName, "rb");
+  FILE* fp;
+  fopen_s(&fp, fileName, "rb");
   if (!fp) {
     return NULL;
   }

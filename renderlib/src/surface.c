@@ -29,35 +29,40 @@
 #include "utils.h"
 
 bool surfaceAllocate(Surface* surface) {
-  surface->length = surface->width * surface->height * sizeof(uint32_t);
+  surface->length = surface->width * surface->height * sizeof(RGBA);
 
+  RGBA* dataPtr;
   if (!surface->data) {
-    surface->data = calloc(1, surface->length);
+      dataPtr = calloc(1, surface->length);
   } else {
-    surface->data = realloc(surface->data, surface->length);
+      dataPtr = realloc(surface->data, surface->length);
   }
-  if (!surface->data) {
+  if (!dataPtr) {
     return false;
   }
+  surface->data = dataPtr;
 
+  RGBA** rowPtr;
   if (!surface->rows) {
-    surface->rows = calloc(1, surface->height * sizeof(uint32_t));
+    rowPtr = calloc(1, surface->height * sizeof(RGBA*));
   } else {
-    surface->rows = realloc(surface->rows, surface->height * sizeof(uint32_t));
+      rowPtr = realloc(surface->rows, surface->height * sizeof(RGBA*));
   }
-  if (!surface->rows) {
-    return false;
+  if (!rowPtr) {
+      surfaceDestroy(surface);
+      return false;
   }
+  surface->rows = rowPtr;
 
   // Assign row pointers
-  for (int32_t row = 0; row < surface->height; row++) {
-    surface->rows[row] = (surface->data + row * surface->width);
+  for (int row = 0; row < surface->height; row++) {
+    surface->rows[row] = surface->data + row * surface->width;
   }
 
   return true;
 }
 
-bool surfaceResize(Surface* surface, const uint32_t width, const uint32_t height) {
+bool surfaceResize(Surface* surface, const unsigned int width, const unsigned int height) {
   surface->width = width;
   surface->height = height;
 
@@ -65,13 +70,13 @@ bool surfaceResize(Surface* surface, const uint32_t width, const uint32_t height
 }
 
 // Copy a surface to a regular DIB, doubling each pixel
-void surfaceCopyToBitmapDouble(const Surface* srcSurface, uint32_t* ptrBitmapBits, const uint32_t destWidth, const uint32_t destHeight) {
+void surfaceCopyToBitmapDouble(const Surface* srcSurface, uint32_t* ptrBitmapBits, const unsigned int destWidth, const unsigned int destHeight) {
   if (!srcSurface || !ptrBitmapBits) {
     return;
   }
 
-  uint32_t cx, cy;
-  uint32_t* src;
+  unsigned int cx, cy;
+  RGBA* src;
   uint32_t* dest = ptrBitmapBits;
 
   cy = destHeight >> 1;
@@ -95,16 +100,16 @@ void surfaceCopyToBitmapDouble(const Surface* srcSurface, uint32_t* ptrBitmapBit
 }
 
 // Copy a surface to a regular DIB
-void surfaceCopyToBitmap(const Surface *srcSurface, uint32_t *ptrBitmapBits) {
+void surfaceCopyToBitmap(const Surface *srcSurface, uint32_t* ptrBitmapBits) {
   if (!srcSurface || !ptrBitmapBits) {
     return;
   }
 
-  const int32_t len = srcSurface->width << 2;
+  const int len = srcSurface->width << 2;
   uint32_t* src = srcSurface->rows[srcSurface->height - 1];
   uint32_t* dest = ptrBitmapBits;
 
-  for (int32_t y = 0; y < srcSurface->height; y++) {
+  for (int y = 0; y < srcSurface->height; y++) {
     memcpy(dest, src, len);
     src -= srcSurface->width;
     dest += srcSurface->width;
@@ -112,16 +117,16 @@ void surfaceCopyToBitmap(const Surface *srcSurface, uint32_t *ptrBitmapBits) {
 }
 
 // Copy a surface to an SDL surface, scaling each pixel
-void surfaceCopyToBitmapScaled(const Surface* srcSurface, uint32_t *ptrBitmapBits, const uint32_t destWidth, const uint32_t destHeight, const uint32_t scale) {
+void surfaceCopyToBitmapScaled(const Surface* srcSurface, uint32_t* ptrBitmapBits, const unsigned int destWidth, const unsigned int destHeight, const unsigned int scale) {
   if (!srcSurface || !ptrBitmapBits) {
     return;
   }
 
-  uint32_t cx, cy;
-  float cu, cv;
+  unsigned int cx, cy;
+  double cu, cv;
   uint32_t* dest;
 
-  const float factor = 1.0 / scale;
+  const double factor = 1.0 / scale;
   uint32_t* destRow = ptrBitmapBits + (destHeight * destWidth) - destWidth;
 
   cv = 0;
@@ -152,10 +157,10 @@ EXPORT Surface* surfaceFlipY(const Surface* srcSurface) {
     return NULL;
   }
 
-  uint32_t* dest = destSurface->data;
-  uint32_t* src = srcSurface->rows[srcSurface->height - 1];
-  const uint32_t len = srcSurface->width << 2;
-  for (int32_t y = 0; y < srcSurface->height; y++) {
+  RGBA* dest = destSurface->data;
+  RGBA* src = srcSurface->rows[srcSurface->height - 1];
+  const unsigned int len = srcSurface->width << 2;
+  for (int y = 0; y < srcSurface->height; y++) {
     memcpy(dest, src, len);
     dest += destSurface->width;
     src -= srcSurface->width;
@@ -174,7 +179,7 @@ EXPORT uint32_t surfaceGetHeight(const Surface* surface) {
 }
 
 // Write a surface to a PNG file
-EXPORT bool surfaceWriteToPNG(const Surface* surface, const char* fileName, const uint8_t compressLevel) {
+EXPORT bool surfaceWriteToPNG(const Surface* surface, const char* fileName, const unsigned int compressLevel) {
   if (!surface) {
     return false;
   }
@@ -199,7 +204,7 @@ EXPORT bool surfaceWriteToPNG(const Surface* surface, const char* fileName, cons
     return false;
   }
 
-  int32_t x, y;
+  int x, y;
   uint32_t src;
   for (y = 0; y < surface->height; y++) {
     for (x = 0; x < surface->width; x++) {
@@ -211,7 +216,8 @@ EXPORT bool surfaceWriteToPNG(const Surface* surface, const char* fileName, cons
 
   pngSave(png, (uint8_t*)imageData, NULL, 0, compressLevel);
 
-  FILE* fp = fopen(fileName, "wb");
+  FILE* fp;
+  fopen_s(&fp, fileName, "wb");
   if (!fp) {
     free(imageData);
     pngClose(png);
@@ -234,12 +240,17 @@ EXPORT bool surfaceWriteToPNG(const Surface* surface, const char* fileName, cons
 
 // Load a surface from a PNG file
 EXPORT Surface* surfaceReadFromPNG(const char* fileName) {
-  FILE* fp = fopen(fileName, "rb");
+  FILE* fp;
+  fopen_s(&fp, fileName, "rb");
   fseek(fp, 0, SEEK_END);
   const uint32_t length = ftell(fp);
   fseek(fp, 0, SEEK_SET);
 
   void* data = calloc(1, length);
+  if (!data) {
+      fclose(fp);
+      return NULL;
+  }
   if (fread(data, 1, length, fp) == 0) {
     free(data);
     fclose(fp);
@@ -275,7 +286,7 @@ EXPORT Surface* surfaceReadFromPNG(const char* fileName) {
     }
     pngRead(png, imageData, NULL);
 
-    int32_t x, y;
+    int x, y;
     for (y = 0; y < surface->height; y++) {
       for (x = 0; x < surface->width; x++) {
         surface->rows[y][x] = *(uint8_t*)(imageData + x + y * surface->width) << 24;
@@ -294,7 +305,7 @@ EXPORT Surface* surfaceReadFromPNG(const char* fileName) {
     pngRead(png, imageData, NULL);
 
     uint32_t col;
-    int32_t x, y;
+    int x, y;
     for (y = 0; y < surface->height; y++) {
       for (x = 0; x < surface->width; x++) {
         col = *(uint32_t*)(imageData + (x + y * surface->width) * 3);
@@ -321,7 +332,7 @@ EXPORT Surface* surfaceReadFromPNG(const char* fileName) {
 }
 
 // Allocate a new, empty surface
-EXPORT Surface* surfaceCreate(const uint32_t width, const uint32_t height) {
+EXPORT Surface* surfaceCreate(const unsigned int width, const unsigned int height) {
   Surface* surface = calloc(1, sizeof(Surface));
   if (!surface) {
     return NULL;
@@ -350,16 +361,16 @@ EXPORT void surfaceDestroy(Surface* surface) {
 }
 
 // Extract a portion of a surface onto another
-EXPORT void surfaceExtract(const Surface* srcSurface, const Surface* destSurface, const int32_t x, const int32_t y) {
+EXPORT void surfaceExtract(const Surface* srcSurface, const Surface* destSurface, const int x, const int y) {
   if (!srcSurface || !destSurface) {
     return;
   }
 
-  const int32_t len = destSurface->width << 2;
-  uint32_t* src = srcSurface->rows[y] + x;
-  uint32_t* dest = destSurface->data;
+  const int len = destSurface->width << 2;
+  RGBA* src = srcSurface->rows[y] + x;
+  RGBA* dest = destSurface->data;
 
-  for (int32_t row = 0; row < destSurface->height; row++) {
+  for (int row = 0; row < destSurface->height; row++) {
     memcpy(dest, src, len);
     src += srcSurface->width;
     dest += destSurface->width;
@@ -367,12 +378,12 @@ EXPORT void surfaceExtract(const Surface* srcSurface, const Surface* destSurface
 }
 
 // Fill this surface with a single color
-EXPORT void surfaceFill(const Surface* destSurface, const uint32_t color) {
+EXPORT void surfaceFill(const Surface* destSurface, const RGBA color) {
   if (!destSurface) {
     return;
   }
 
-  for (int32_t pixel = 0; pixel < destSurface->width * destSurface->height; pixel++) {
+  for (int pixel = 0; pixel < destSurface->width * destSurface->height; pixel++) {
     *(destSurface->data + pixel) = color;
   }
 }
@@ -399,17 +410,17 @@ EXPORT Surface* surfaceClone(const Surface* surface) {
 EXPORT Rectangle surfaceUsedRect(const Surface* surface) {
   Rectangle rect = {surface->width, surface->height, 0, 0};
 
-  for (int32_t y = 0; y < surface->height; y++) {
-    for (int32_t x = 0; x < surface->width; x++) {
-      uint32_t pixel = surface->data[x + y * surface->width];
+  for (int y = 0; y < surface->height; y++) {
+    for (int x = 0; x < surface->width; x++) {
+      RGBA pixel = surface->data[x + y * surface->width];
       if (ALPHA(pixel)) {
         rect.x1 = x < rect.x1 ? x : rect.x1;
         break;
       }
     }
 
-    for (int32_t x = surface->width - 1; x >= 0; x--) {
-      uint32_t pixel = surface->data[x + y * surface->width];
+    for (int x = surface->width - 1; x >= 0; x--) {
+      RGBA pixel = surface->data[x + y * surface->width];
       if (ALPHA(pixel)) {
         rect.x2 = x > rect.x2 ? x : rect.x2;
         break;
@@ -417,17 +428,17 @@ EXPORT Rectangle surfaceUsedRect(const Surface* surface) {
     }
   }
 
-  for (int32_t x = 0; x < surface->width; x++) {
-    for (int32_t y = 0; y < surface->height; y++) {
-      uint32_t pixel = surface->data[x + y * surface->width];
+  for (int x = 0; x < surface->width; x++) {
+    for (int y = 0; y < surface->height; y++) {
+      RGBA pixel = surface->data[x + y * surface->width];
       if (ALPHA(pixel)) {
         rect.y1 = y < rect.y1 ? y : rect.y1;
         break;
       }
     }
 
-    for (int32_t y = surface->height - 1; y >= 0; y--) {
-      uint32_t pixel = surface->data[x + y * surface->width];
+    for (int y = surface->height - 1; y >= 0; y--) {
+      RGBA pixel = surface->data[x + y * surface->width];
       if (ALPHA(pixel)) {
         rect.y2 = y > rect.y2 ? y : rect.y2;
         break;

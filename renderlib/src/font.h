@@ -27,8 +27,8 @@
 #define H_FONT
 
 typedef struct {
-  int8_t charWidth;
-  int8_t charHeight;
+  int charWidth;
+  int charHeight;
   Surface* surface;
 } Font;
 

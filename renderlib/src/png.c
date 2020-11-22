@@ -36,16 +36,28 @@ EXPORT uint32_t pngAddChunk(PNGContext* png, const char* name, const uint32_t si
 
   // Add new chunk in list
   PNGChunk* newChunk = calloc(1, sizeof(PNGChunk));
+  if (!newChunk) {
+      return 0;
+  }
   newChunk->next = png->chunks;
   png->chunks = newChunk;
 
   // Copy name
   newChunk->name = calloc(1, 5);
+  if (!newChunk->name) {
+      free(newChunk);
+      return 0;
+  }
   memcpy(newChunk->name, name, 5);
 
   // Copy size and data
   newChunk->size = size;
   newChunk->data = malloc(size);
+  if (!newChunk->data) {
+      free(newChunk->name);
+      free(newChunk);
+      return 0;
+  }
   memcpy(newChunk->data, data, size);
 
   return 1;
@@ -73,7 +85,7 @@ void pngUserReadData(const png_structp pngPtr, const png_bytep data, const png_s
   }
 
   // Check if the read is within bounds
-  uint32_t readLength = length;
+  png_size_t readLength = length;
   if (png->dataOffset + readLength > png->dataSize) {
     readLength = png->dataSize - png->dataOffset;
     if (readLength <= 0) {
@@ -96,9 +108,13 @@ void pngUserWriteData(const png_structp pngPtr, const png_bytep data, const png_
     return;
   }
 
-  png->dataSize += length;
-  png->data = realloc(png->data, png->dataSize);
+  uint8_t* dataPtr = realloc(png->data, png->dataSize + length);
+  if (!dataPtr) {
+      return;
+  }
+  png->data = dataPtr;
   memcpy(png->data + png->dataOffset, data, length);
+  png->dataSize += length;
   png->dataOffset += length;
 
   return;
@@ -109,6 +125,10 @@ void pngUserWriteData(const png_structp pngPtr, const png_bytep data, const png_
 EXPORT PNGContext* pngCreate() {
   // Allocate context
   PNGContext* png = calloc(1, sizeof(PNGContext));
+  if (!png) {
+      return NULL;
+  }
+
   png->pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (!png->pngPtr) {
     pngClose(png);
@@ -170,6 +190,10 @@ EXPORT uint32_t pngSave(PNGContext* png, const uint8_t* src, uint8_t* pal, const
   if (png->colorType == PNG_COLOR_TYPE_PALETTE || png->colorType == PNG_COLOR_TYPE_GRAY ||
       png->colorType == PNG_COLOR_TYPE_RGB) {
     png_color_16p transValues = calloc(1, sizeof(png_color_16));
+    if (!transValues) {
+        pngClose(png);
+        return 0;
+    }
 
     if (png->colorType == PNG_COLOR_TYPE_PALETTE) {
       transValues->index = (uint8_t)png->transColor;
@@ -193,9 +217,13 @@ EXPORT uint32_t pngSave(PNGContext* png, const uint8_t* src, uint8_t* pal, const
 
   // Allocate memory for the row pointers
   png_bytep* rows = (png_bytep*)calloc(png->height, sizeof(png_bytep));
+  if (!rows) {
+      pngClose(png);
+      return 0;
+  }
 
   // Point the row pointers into the destination
-  uint32_t stride = png_get_rowbytes(png->pngPtr, png->infoPtr);
+  size_t stride = png_get_rowbytes(png->pngPtr, png->infoPtr);
   for (uint32_t y = 0; y < png->height; y++) {
     rows[y] = (png_byte*)(src + (y * stride));
   }
@@ -223,6 +251,10 @@ EXPORT PNGContext* pngOpen(uint8_t* src, const uint32_t srcLen) {
 
   // Allocate png context and init libpng read structure
   PNGContext* png = calloc(1, sizeof(PNGContext));
+  if (!png) {
+      return NULL;
+  }
+
   png->pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (!png->pngPtr) {
     pngClose(png);
@@ -302,9 +334,12 @@ EXPORT uint32_t pngRead(PNGContext* png, uint8_t* dest, uint8_t* destPal) {
 
   // Allocate memory for the image's row pointers
   png_bytep* rows = (png_bytep*)calloc(png->height, sizeof(png_bytep));
+  if (!rows) {
+      return 0;
+  }
 
   // Point the row pointers to their destinations
-  uint32_t stride = png_get_rowbytes(png->pngPtr, png->infoPtr);
+  size_t stride = png_get_rowbytes(png->pngPtr, png->infoPtr);
   for (uint32_t y = 0; y < png->height; y++) {
     rows[y] = (png_byte*)(dest + (y * stride));
   }

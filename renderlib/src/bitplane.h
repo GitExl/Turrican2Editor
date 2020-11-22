@@ -26,12 +26,17 @@
 #ifndef H_BITPLANE
 #define H_BITPLANE
 
+#include "surface.h"
+#include "palette.h"
+
+typedef uint8_t Pixel;
+
 typedef struct {
-  uint32_t width;
-  uint32_t height;
-  uint8_t planes;
-  uint8_t* data;
-  uint32_t length;
+  unsigned int width;
+  unsigned int height;
+  unsigned int planes;
+  Pixel* data;
+  unsigned int length;
 } Bitplane;
 
 typedef enum {
@@ -46,10 +51,10 @@ typedef enum {
   MASK_MODE_BITPLANE = 2
 } MaskMode;
 
-Bitplane* bitplaneCreate (const uint32_t width, const uint32_t height, const uint8_t planes);
+Bitplane* bitplaneCreate (const unsigned int width, const unsigned int height, const unsigned int planes);
 
-EXPORT Bitplane* bitplaneCreateFromStream (StreamRead* stream, BitplaneType type, const uint32_t width, const uint32_t height, const uint8_t planes);
+EXPORT Bitplane* bitplaneCreateFromStream (StreamRead* stream, BitplaneType type, const unsigned int width, const unsigned int height, const unsigned int planes);
 EXPORT void      bitplaneDestroy          (Bitplane* bp);
-EXPORT Surface*  bitplaneToSurface        (const Bitplane* bp, const Bitplane* mask, const Palette* palette, const uint32_t maskColor, const int32_t shift, const MaskMode mode);
+EXPORT Surface*  bitplaneToSurface        (const Bitplane* bp, const Bitplane* mask, const Palette* palette, const RGBA maskColor, const unsigned int shift, const MaskMode mode);
 
 #endif

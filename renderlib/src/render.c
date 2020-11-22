@@ -33,15 +33,15 @@
 /**
  * Inline functions for mixing pixel data.
  */
-static inline uint32_t renderPixelAlphaSimple(const uint32_t dest, const uint32_t src) {
+static inline uint32_t renderPixelAlphaSimple(const RGBA dest, const RGBA src) {
   return (ALPHA(src) == 0xFF) ? src : dest;
 }
 
-static inline uint32_t renderPixelSolid(const uint32_t src) {
+static inline uint32_t renderPixelSolid(const RGBA src) {
   return (src | 0xFF000000);
 }
 
-static inline uint32_t renderPixelAlpha50(const uint32_t dest, const uint32_t src) {
+static inline uint32_t renderPixelAlpha50(const RGBA dest, const RGBA src) {
   if (ALPHA(src) == 0xFF) {
     return (((dest & 0x00FEFEFE) >> 1) + ((src & 0x00FEFEFE) >> 1)) | (0xFF << 24);
   }
@@ -49,7 +49,7 @@ static inline uint32_t renderPixelAlpha50(const uint32_t dest, const uint32_t sr
   return dest;
 }
 
-static inline uint32_t renderPixelAlpha(const uint32_t dest, const uint32_t src) {
+static inline uint32_t renderPixelAlpha(const RGBA dest, const RGBA src) {
   if (ALPHA(src) == 0) {
     return dest;
   } else if (ALPHA(src) == 0xFF) {
@@ -72,12 +72,12 @@ static inline uint32_t renderPixelAlpha(const uint32_t dest, const uint32_t src)
  * @param ry          The y coordinate to render to.
  * @param color       The color of the outline.
  */
-EXPORT void renderOutline(const Surface* destSurface, const Surface* srcSurface, const int32_t rx, const int32_t ry, const uint32_t color) {
-  int32_t x, y;
-  int32_t cx, cy;
+EXPORT void renderOutline(const Surface* destSurface, const Surface* srcSurface, const int rx, const int ry, const RGBA color) {
+  int x, y;
+  int cx, cy;
 
-  for(y = 0; y < srcSurface->height; y++) {
-    for(x = 0; x < srcSurface->width; x++) {
+  for (y = 0; y < srcSurface->height; y++) {
+    for (x = 0; x < srcSurface->width; x++) {
       if (ALPHA(srcSurface->rows[y][x]) != 0) {
         cx = x + rx;
         cy = y + ry;
@@ -123,15 +123,15 @@ EXPORT void renderOutline(const Surface* destSurface, const Surface* srcSurface,
  * @param y2          The Y coordinate of point 2.
  * @param color       The color value to render the line with.
  */
-EXPORT void renderLine(const Surface* destSurface, int32_t x1, int32_t y1, const int32_t x2, const int32_t y2, const uint32_t color) {
-  const int32_t dx = abs(x2 - x1);
-  const int32_t dy = abs(y2 - y1);
+EXPORT void renderLine(const Surface* destSurface, int x1, int y1, const int x2, const int y2, const RGBA color) {
+  const int dx = abs(x2 - x1);
+  const int dy = abs(y2 - y1);
 
-  int32_t x = x1;
-  int32_t y = y1;
-  int32_t xInc1 = 0, xInc2 = 0;
-  int32_t yInc1 = 0, yInc2 = 0;
-  int32_t den = 0, num = 0, numAdd = 0, numPixels = 0, curPixel = 0;
+  int x = x1;
+  int y = y1;
+  int xInc1 = 0, xInc2 = 0;
+  int yInc1 = 0, yInc2 = 0;
+  int den = 0, num = 0, numAdd = 0, numPixels = 0, curPixel = 0;
 
   if (x2 >= x1) {
     xInc1 = 1;
@@ -198,7 +198,7 @@ EXPORT void renderLine(const Surface* destSurface, int32_t x1, int32_t y1, const
  * @param color       The color to render the text with. It's alpha component will be stripped and the Font's alpha
  *                    will be used instead.
  */
-EXPORT void renderText(const Surface* destSurface, const Font* srcFont, const int32_t x, const int32_t y, const uint8_t* text, uint32_t color) {
+EXPORT void renderText(const Surface* destSurface, const Font* srcFont, const int x, const int y, const char* text, RGBA color) {
   if (!destSurface || !srcFont || !text) {
     return;
   }
@@ -206,10 +206,10 @@ EXPORT void renderText(const Surface* destSurface, const Font* srcFont, const in
     return;
   }
 
-  int32_t   rx, cx, cy;
-  int32_t   dx, dy;
-  uint32_t* dest;
-  uint32_t  character = 0;
+  int rx, cx, cy;
+  int dx, dy;
+  RGBA* dest;
+  unsigned int character = 0;
 
   // Strip alpha from the color, the Font surface's alpha will be used instead.
   color &= 0x00FFFFFF;
@@ -255,9 +255,8 @@ EXPORT void renderText(const Surface* destSurface, const Font* srcFont, const in
  * @param width       The width of the box.
  * @param height      The height of the box.
  * @param color       The color of the box.
- * @param blendOp     The blend operation to render the box with.
  */
-EXPORT void renderBox(const Surface* destSurface, int32_t x, int32_t y, int32_t width, int32_t height, const uint32_t color) {
+EXPORT void renderBox(const Surface* destSurface, int x, int y, int width, int height, const RGBA color) {
   if (!destSurface) {
     return;
   }
@@ -273,7 +272,7 @@ EXPORT void renderBox(const Surface* destSurface, int32_t x, int32_t y, int32_t 
   }
 
   // Top and bottom.
-  for (int32_t rx = x; rx < x + width + 1; rx++) {
+  for (int rx = x; rx < x + width + 1; rx++) {
     if (y >= 0 && y < destSurface->height && rx >= 0 && rx < destSurface->width) {
       destSurface->rows[y][rx] = renderPixelSolid(color);
     }
@@ -284,7 +283,7 @@ EXPORT void renderBox(const Surface* destSurface, int32_t x, int32_t y, int32_t 
   }
 
   // Left and right.
-  for (int32_t ry = y + 1; ry < y + height; ry++) {
+  for (int ry = y + 1; ry < y + height; ry++) {
     if (ry >= 0 && ry < destSurface->height && x >= 0 && x < destSurface->width) {
       destSurface->rows[ry][x] = renderPixelSolid(color);
     }
@@ -304,15 +303,15 @@ EXPORT void renderBox(const Surface* destSurface, int32_t x, int32_t y, int32_t 
  * @param x           The X coordinate to blit to.
  * @param y           The Y coordinate to blit to.
  */
-EXPORT void renderBlit(const Surface* destSurface, const Surface* srcSurface, int32_t x, int32_t y) {
+EXPORT void renderBlit(const Surface* destSurface, const Surface* srcSurface, int x, int y) {
   if (!destSurface || !srcSurface) {
     return;
   }
 
-  int32_t rW = srcSurface->width;
-  int32_t rH = srcSurface->height;
-  int32_t xO = 0;
-  int32_t yO = 0;
+  int rW = srcSurface->width;
+  int rH = srcSurface->height;
+  int xO = 0;
+  int yO = 0;
 
   // Bounds checks.
   if (x < 0) {
@@ -346,10 +345,10 @@ EXPORT void renderBlit(const Surface* destSurface, const Surface* srcSurface, in
   }
 
   // Copy each row of pixels.
-  uint32_t* dest = destSurface->rows[y] + x;
-  uint32_t* src = srcSurface->rows[yO] + xO;
-  const int32_t len = rW << 2;
-  for (int32_t cy = 0; cy < rH; cy++) {
+  RGBA* dest = destSurface->rows[y] + x;
+  RGBA* src = srcSurface->rows[yO] + xO;
+  const int len = rW << 2;
+  for (int cy = 0; cy < rH; cy++) {
     memcpy(dest, src, len);
     dest += destSurface->width;
     src += srcSurface->width;
@@ -367,7 +366,7 @@ EXPORT void renderBlit(const Surface* destSurface, const Surface* srcSurface, in
  * @param color       The color of the box.
  * @param blendOp     The blend operation to render the box with.
  */
-EXPORT void renderBoxFill(const Surface* destSurface, int32_t x, int32_t y, int32_t width, int32_t height, const uint32_t color, const BlendOp blendOp) {
+EXPORT void renderBoxFill(const Surface* destSurface, int x, int y, int width, int height, const RGBA color, const BlendOp blendOp) {
   if (!destSurface) {
     return;
   }
@@ -411,9 +410,9 @@ EXPORT void renderBoxFill(const Surface* destSurface, int32_t x, int32_t y, int3
     }
   }
 
-  int32_t cx, cy;
-  uint32_t *dest;
-  uint32_t* destRow = destSurface->rows[y] + x;
+  int cx, cy;
+  RGBA* dest;
+  RGBA* destRow = destSurface->rows[y] + x;
 
   for (cy = 0; cy < height; cy++) {
     dest = destRow;
@@ -458,13 +457,13 @@ EXPORT void renderBoxFill(const Surface* destSurface, int32_t x, int32_t y, int3
  * @param y           The Y coordinate to blit to.
  * @param blendOp     The blend operation to blit with.
  */
-EXPORT void renderBlitBlend(const Surface* destSurface, const Surface *srcSurface, int32_t x, int32_t y, const BlendOp blendOp) {
+EXPORT void renderBlitBlend(const Surface* destSurface, const Surface *srcSurface, int x, int y, const BlendOp blendOp) {
   if (!destSurface || !srcSurface) {
     return;
   }
 
-  int32_t xO = 0;
-  int32_t rW = srcSurface->width;
+  int xO = 0;
+  int rW = srcSurface->width;
   if (x < 0) {
     rW = rW + x;
     if (rW <= 0) {
@@ -474,8 +473,8 @@ EXPORT void renderBlitBlend(const Surface* destSurface, const Surface *srcSurfac
     x = 0;
   }
 
-  int32_t yO = 0;
-  int32_t rH = srcSurface->height;
+  int yO = 0;
+  int rH = srcSurface->height;
   if (y < 0) {
     rH = rH + y;
     if (rH <= 0) {
@@ -498,9 +497,9 @@ EXPORT void renderBlitBlend(const Surface* destSurface, const Surface *srcSurfac
     }
   }
 
-  uint32_t* dest;
-  uint32_t* src;
-  int32_t cx, cy;
+  RGBA* dest;
+  RGBA* src;
+  int cx, cy;
   for (cy = 0; cy < rH; cy++) {
     dest = destSurface->rows[y + cy] + x;
     src = srcSurface->rows[yO + cy] + xO;
@@ -555,17 +554,17 @@ EXPORT void renderBlitBlend(const Surface* destSurface, const Surface *srcSurfac
  * @param height      The target height of the surface.
  * @param blendOp     The blend operation to blit with.
  */
-EXPORT void renderBlitBlendScale(const Surface* destSurface, const Surface* srcSurface, const int32_t x, const int32_t y, const int32_t width, const int32_t height, const BlendOp blendOp) {
+EXPORT void renderBlitBlendScale(const Surface* destSurface, const Surface* srcSurface, const int x, const int y, const int width, const int height, const BlendOp blendOp) {
   if (!srcSurface || !destSurface || width < 1 || height < 1) {
     return;
   }
 
-  const int32_t stepx = (srcSurface->width << 16) / width;
-  const int32_t stepy = (srcSurface->height << 16) / height;
+  const int stepx = (srcSurface->width << 16) / width;
+  const int stepy = (srcSurface->height << 16) / height;
 
-  int32_t cx, cy;
-  int32_t cu, cv;
-  uint32_t* dest;
+  int cx, cy;
+  int cu, cv;
+  RGBA* dest;
 
   cv = 0;
   for (cy = y; cy < y + height; cy++) {

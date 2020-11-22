@@ -26,29 +26,31 @@
 #ifndef H_SURFACE
 #define H_SURFACE
 
+typedef uint32_t RGBA;
+
 typedef struct {
-  int32_t width;
-  int32_t height;
-  uint32_t length;
-  uint32_t* data;
-  uint32_t** rows;
+  int width;
+  int height;
+  unsigned int length;
+  RGBA* data;
+  RGBA** rows;
 } Surface;
 
 bool surfaceAllocate           (Surface* surface);
-bool surfaceResize             (Surface* surface, const uint32_t width, const uint32_t height);
-void surfaceCopyToBitmapDouble (const Surface* srcSurface, uint32_t* ptrBitmapBits, const uint32_t destWidth, const uint32_t destHeight);
-void surfaceCopyToBitmap       (const Surface *srcSurface, uint32_t *ptrBitmapBits);
-void surfaceCopyToBitmapScaled (const Surface* srcSurface, uint32_t *ptrBitmapBits, const uint32_t destWidth, const uint32_t destHeight, uint32_t scale);
+bool surfaceResize             (Surface* surface, const unsigned int width, const unsigned int height);
+void surfaceCopyToBitmapDouble (const Surface* srcSurface, uint32_t* ptrBitmapBits, const unsigned int destWidth, const unsigned int destHeight);
+void surfaceCopyToBitmap       (const Surface *srcSurface, uint32_t* ptrBitmapBits);
+void surfaceCopyToBitmapScaled (const Surface* srcSurface, uint32_t* ptrBitmapBits, const unsigned int destWidth, const unsigned int destHeight, unsigned int scale);
 
 EXPORT Surface* surfaceFlipY              (const Surface* srcSurface);
 EXPORT uint32_t surfaceGetWidth           (const Surface* surface);
 EXPORT uint32_t surfaceGetHeight          (const Surface* surface);
-EXPORT bool     surfaceWriteToPNG         (const Surface* surface, const char* fileName, const uint8_t compressLevel);
+EXPORT bool     surfaceWriteToPNG         (const Surface* surface, const char* fileName, const unsigned int compressLevel);
 EXPORT Surface* surfaceReadFromPNG        (const char* fileName);
-EXPORT Surface* surfaceCreate             (const uint32_t width, const uint32_t height);
+EXPORT Surface* surfaceCreate             (const unsigned int width, const unsigned int height);
 EXPORT void     surfaceDestroy            (Surface* surface);
-EXPORT void     surfaceExtract            (const Surface* srcSurface, const Surface* destSurface, const int32_t x, const int32_t y);
-EXPORT void     surfaceFill               (const Surface* destSurface, const uint32_t color);
+EXPORT void     surfaceExtract            (const Surface* srcSurface, const Surface* destSurface, const int x, const int y);
+EXPORT void     surfaceFill               (const Surface* destSurface, const RGBA color);
 EXPORT void     surfaceClear              (const Surface* surface);
 EXPORT Surface* surfaceClone              (const Surface* surface);
 

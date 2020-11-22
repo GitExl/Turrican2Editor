@@ -26,30 +26,32 @@
 #ifndef H_UTILS
 #define H_UTILS
 
+#include "surface.h"
+
 typedef struct {
-  int32_t x1;
-  int32_t y1;
-  int32_t x2;
-  int32_t y2;
+  int x1;
+  int y1;
+  int x2;
+  int y2;
 } Rectangle;
 
 // RGB component splitting
-#define RED(rgb)   (uint8_t) rgb
-#define GREEN(rgb) (uint8_t)(rgb >> 8)
-#define BLUE(rgb)  (uint8_t)(rgb >> 16)
-#define ALPHA(rgb) (uint8_t)(rgb >> 24)
+#define RED(rgb)   (unsigned char) rgb
+#define GREEN(rgb) (unsigned char)(rgb >> 8)
+#define BLUE(rgb)  (unsigned char)(rgb >> 16)
+#define ALPHA(rgb) (unsigned char)(rgb >> 24)
 
 // RGB creation
-#define RGB(r, g, b)     (uint32_t)r | (g << 8) | (b << 16)
-#define RGBA(r, g, b, a) (uint32_t)r | (g << 8) | (b << 16) | (a << 24)
-#define BGRA(r, g, b, a) (uint32_t)b | (g << 8) | (r << 16) | (a << 24)
+#define RGB(r, g, b)     (RGBA)r | (g << 8) | (b << 16)
+#define RGBA(r, g, b, a) (RGBA)r | (g << 8) | (b << 16) | (a << 24)
+#define BGRA(r, g, b, a) (RGBA)b | (g << 8) | (r << 16) | (a << 24)
 
 // Byte swapping
 #define SWAP2(value) (((value) & 0xFF) << 8) | (value >> 8)
 #define SWAP4(value) (((value >> 24) & 0xFF) | ((value >> 8) & 0xFF00) | ((value << 8) & 0xFF0000) | ((value << 24) & 0xFF000000))
 
-uint32_t EXPORT createBGRA (const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a);
-uint32_t EXPORT createRGBA (const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a);
-uint32_t EXPORT swapRGBA   (const uint32_t color);
+RGBA EXPORT createBGRA (const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
+RGBA EXPORT createRGBA (const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a);
+RGBA EXPORT swapRGBA   (const RGBA color);
 
 #endif

@@ -26,6 +26,8 @@
 #ifndef H_RENDER
 #define H_RENDER
 
+#include "surface.h"
+
 typedef enum {
   BLENDOP_SOLID        = 0,
   BLENDOP_ALPHA50      = 1,
@@ -33,13 +35,13 @@ typedef enum {
   BLENDOP_ALPHA_SIMPLE = 3
 } BlendOp;
 
-EXPORT void renderOutline        (const Surface* destSurface, const Surface* srcSurface, const int32_t rx, const int32_t ry, const uint32_t color);
-EXPORT void renderLine           (const Surface* destSurface, int32_t x1, int32_t y1, const int32_t x2, const int32_t y2, const uint32_t color);
-EXPORT void renderText           (const Surface* destSurface, const Font* srcFont, const int32_t x, const int32_t y, const uint8_t* text, uint32_t color);
-EXPORT void renderBox            (const Surface* destSurface, int32_t x, int32_t y, int32_t width, int32_t height, const uint32_t color);
-EXPORT void renderBlit           (const Surface* destSurface, const Surface* srcSurface, int32_t x, int32_t y);
-EXPORT void renderBoxFill        (const Surface* destSurface, int32_t x, int32_t y, int32_t width, int32_t height, const uint32_t color, const BlendOp blendOp);
-EXPORT void renderBlitBlend      (const Surface* destSurface, const Surface *srcSurface, int32_t x, int32_t y, const BlendOp blendOp);
-EXPORT void renderBlitBlendScale (const Surface* destSurface, const Surface* srcSurface, const int32_t x, const int32_t y, const int32_t width, const int32_t height, const BlendOp blendOp);
+EXPORT void renderOutline        (const Surface* destSurface, const Surface* srcSurface, const int rx, const int ry, const RGBA color);
+EXPORT void renderLine           (const Surface* destSurface, int x1, int y1, const int x2, const int y2, const RGBA color);
+EXPORT void renderText           (const Surface* destSurface, const Font* srcFont, const int x, const int y, const char* text, RGBA color);
+EXPORT void renderBox            (const Surface* destSurface, int x, int y, int width, int height, const RGBA color);
+EXPORT void renderBlit           (const Surface* destSurface, const Surface* srcSurface, int x, int y);
+EXPORT void renderBoxFill        (const Surface* destSurface, int x, int y, int width, int height, const RGBA color, const BlendOp blendOp);
+EXPORT void renderBlitBlend      (const Surface* destSurface, const Surface *srcSurface, int x, int y, const BlendOp blendOp);
+EXPORT void renderBlitBlendScale (const Surface* destSurface, const Surface* srcSurface, const int x, const int y, const int width, const int height, const BlendOp blendOp);
 
 #endif

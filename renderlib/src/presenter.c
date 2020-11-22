@@ -35,7 +35,7 @@
  *
  * @return       A new Presenter.
  */
-EXPORT Presenter* presenterCreate(const HWND hwnd, const uint8_t scale) {
+EXPORT Presenter* presenterCreate(const HWND hwnd, const unsigned int scale) {
   if (!hwnd || scale < 1) {
     printf("presenterCreate: invalid parameters.\n");
     return NULL;
@@ -159,8 +159,8 @@ EXPORT void presenterResize(Presenter* presenter) {
     return;
   }
 
-  const uint32_t width = ceil(presenter->width / (float)presenter->scale);
-  const uint32_t height = ceil(presenter->height / (float)presenter->scale);
+  const unsigned int width = ceil(presenter->width / (double)presenter->scale);
+  const unsigned int height = ceil(presenter->height / (double)presenter->scale);
 
   // Resize an existing target surface.
   if (presenter->surface) {
@@ -187,7 +187,7 @@ EXPORT void presenterResize(Presenter* presenter) {
  * @param presenter The Presenter to set the scale for.
  * @param scale     The new scale. Must be > 0.
  */
-EXPORT void presenterSetScale(Presenter* presenter, const uint8_t scale) {
+EXPORT void presenterSetScale(Presenter* presenter, const unsigned int scale) {
   if (scale < 1) {
     printf("presenterSetScale: invalid scale.\n");
     return;
@@ -202,7 +202,7 @@ EXPORT void presenterSetScale(Presenter* presenter, const uint8_t scale) {
  *
  * @param presenter The Presenter to get the scale from.
  */
-EXPORT uint8_t presenterGetScale(Presenter* presenter) {
+EXPORT unsigned int presenterGetScale(Presenter* presenter) {
   return presenter->scale;
 }
 

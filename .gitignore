@@ -115,3 +115,13 @@ $RECYCLE.BIN/
 build
 gamedata*
 releases
+
+# Visual Studio
+*.exp
+*.iobj
+*.ipdb
+*.lib
+*.pdb
+renderlib/.vs
+renderlib/packages/*
+renderlib/x64

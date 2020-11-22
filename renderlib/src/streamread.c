@@ -284,7 +284,8 @@ EXPORT void streamReadSkip(StreamRead* stream, const uint32_t bytes) {
  *                  StreamRead could not be created.
  */
 EXPORT StreamRead* streamReadCreateFromFile(const char* fileName) {
-  FILE* fp = fopen(fileName, "rb");
+  FILE* fp;
+  fopen_s(&fp, fileName, "rb");
   if (!fp) {
     return NULL;
   }
@@ -331,7 +332,8 @@ EXPORT void streamReadInsert(StreamRead* stream, const char* fileName, const uin
     return;
   }
 
-  FILE* fp = fopen(fileName, "rb");
+  FILE* fp;
+  fopen_s(&fp, fileName, "rb");
   if (!fp) {
     return;
   }
@@ -342,11 +344,12 @@ EXPORT void streamReadInsert(StreamRead* stream, const char* fileName, const uin
   fseek(fp, 0, SEEK_SET);
 
   if (offset + length >= stream->length) {
-    stream->data = realloc(stream->data, offset + length);
-    if (!stream->data) {
+    uint8_t* dataPtr = realloc(stream->data, offset + length);
+    if (!dataPtr) {
       fclose(fp);
       return;
     }
+    stream->data = dataPtr;
     stream->length = offset + length;
   }
 
