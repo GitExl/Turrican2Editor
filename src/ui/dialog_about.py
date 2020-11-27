@@ -21,6 +21,8 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from wx import Event
+
 from ui.dialogs import DialogAboutBase
 
 import config
@@ -38,5 +40,5 @@ class DialogAbout(DialogAboutBase):
             license = f.readlines()
         self.License.SetLabelText('\r\n'.join(license))
 
-    def ok(self, event):
+    def ok(self, event: Event):
         self.Destroy()

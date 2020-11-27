@@ -21,47 +21,50 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from typing import Dict, Optional, Tuple
+
 import wx
 
 from copy import copy
 
-from renderlib.surface import BlendOp
+from renderlib.surface import BlendOp, Surface
 
-from turrican2.tilemap import Tilemap
-
+from ui.camera import Camera
 from ui.editmodes.editmode import EditMode
 
+from turrican2.graphics import Graphics
+from turrican2.tilemap import Tilemap
 
-class State(object):
+
+class State:
     NONE = 0
     SELECT = 1
     DRAW = 2
 
 
-class SelectType(object):
+class SelectType:
     NONE = 0
     SELECT = 1
     FILL = 2
 
 
-COLOR_TILE_SELECTION = 0xFFFFFFFF
-COLOR_TILE_FILL = 0xFF00FF00
-
-
 class EditModeTiles(EditMode):
+
+    COLOR_TILE_SELECTION: int = 0xFFFFFFFF
+    COLOR_TILE_FILL: int = 0xFF00FF00
 
     def __init__(self, frame):
         EditMode.__init__(self, frame)
 
-        self._state = State.NONE
+        self._state: int = State.NONE
 
-        self._select_start = None
-        self._select_end = None
-        self._select_type = SelectType.NONE
+        self._select_start: Optional[Tuple[int, int]] = None
+        self._select_end: Optional[Tuple[int, int]] = None
+        self._select_type: int = SelectType.NONE
 
-        self._selection = None
+        self._selection: Optional[Tilemap] = None
 
-    def mouse_left_down(self):
+    def mouse_left_down(self, event: wx.MouseEvent):
         shift = wx.GetKeyState(wx.WXK_SHIFT)
         control = wx.GetKeyState(wx.WXK_CONTROL)
 
@@ -87,7 +90,7 @@ class EditModeTiles(EditMode):
             self._frame.undo_add()
             self.place_tile_selection()
 
-    def mouse_left_up(self):
+    def mouse_left_up(self, event: wx.MouseEvent):
         if self._state == State.SELECT:
             x, y, width, height = self.get_selection_rectangle(self._select_start, self._select_end)
             if width and height:
@@ -104,14 +107,14 @@ class EditModeTiles(EditMode):
         elif self._state == State.DRAW:
             self._state = State.NONE
 
-    def mouse_move(self):
+    def mouse_move(self, event: wx.MouseEvent):
         if self._state == State.DRAW:
             self.place_tile_selection()
 
         elif self._state == State.SELECT:
             self._select_end = self.get_tile_position()
 
-    def paint(self, surface, camera, graphics):
+    def paint(self, surface: Surface, camera: Camera, graphics: Graphics):
         shift = wx.GetKeyState(wx.WXK_SHIFT)
 
         # Draw current tilemap.
@@ -128,9 +131,9 @@ class EditModeTiles(EditMode):
 
             color = 0
             if self._select_type == SelectType.SELECT:
-                color = COLOR_TILE_SELECTION
+                color = EditModeTiles.COLOR_TILE_SELECTION
             elif self._select_type == SelectType.FILL:
-                color = COLOR_TILE_FILL
+                color = EditModeTiles.COLOR_TILE_FILL
 
             surface.box_fill(x1, y1, x2 - x1, y2 - y1, color, BlendOp.ALPHA50)
 
@@ -141,10 +144,7 @@ class EditModeTiles(EditMode):
             self._selection.render_all(surface, self._world.tileset, x, y, False)
             surface.box_fill(x, y, self._selection.width * Tilemap.TILE_SIZE, self._selection.height * Tilemap.TILE_SIZE, 0xFFFFFFFF, BlendOp.ALPHA50)
 
-    def get_tile_selection_position(self):
-        if not self._selection:
-            return None, None
-
+    def get_tile_selection_position(self) -> Tuple[int, int]:
         x = int(self._mouse_position[0] - ((self._selection.width - 1) * Tilemap.TILE_SIZE) / 2)
         y = int(self._mouse_position[1] - ((self._selection.height - 1) * Tilemap.TILE_SIZE) / 2)
 
@@ -153,7 +153,7 @@ class EditModeTiles(EditMode):
 
         return x, y
 
-    def get_tile_position(self):
+    def get_tile_position(self) -> Tuple[int, int]:
         x = int(self._mouse_position[0] / Tilemap.TILE_SIZE)
         y = int(self._mouse_position[1] / Tilemap.TILE_SIZE)
 
@@ -173,16 +173,16 @@ class EditModeTiles(EditMode):
     def level_changed(self):
         self._selection = None
 
-    def set_selection(self, selection):
+    def set_selection(self, selection: Tilemap):
         self._selection = selection
         self._frame.refresh_viewport()
 
-    def undo_restore_item(self, item):
+    def undo_restore_item(self, item: Dict):
         self._level.tilemap.tiles = item['tiles']
         self._frame.set_level_modified(True)
         self._frame.refresh_viewport()
 
-    def undo_store_item(self):
+    def undo_store_item(self) -> Dict:
         return {
             'tiles': copy(self._level.tilemap.tiles)
         }

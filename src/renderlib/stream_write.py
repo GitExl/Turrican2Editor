@@ -24,9 +24,10 @@
 from ctypes import *
 
 from renderlib.dll import dll
+from renderlib.utils import Endianness
 
 
-__all__ = ['StreamWrite', 'Endianness']
+__all__ = ['StreamWrite']
 
 
 streamWriteGetSize = dll.streamWriteGetSize
@@ -94,21 +95,16 @@ streamWriteCreate.argtypes = None
 streamWriteCreate.restype = c_void_p
 
 
-class Endianness(object):
-    LITTLE = 0
-    BIG = 1
+class StreamWrite:
 
-
-class StreamWrite(object):
-
-    def __init__(self, ptr):
-        self._stream = ptr
+    def __init__(self, ptr: int):
+        self._stream: int = ptr
 
     def __del__(self):
         streamWriteDestroy(self._stream)
 
     @classmethod
-    def empty(cls, endianness=Endianness.LITTLE):
+    def empty(cls, endianness: Endianness = Endianness.LITTLE):
         ptr = streamWriteCreate()
         if not ptr:
             raise Exception('Could not create a StreamWrite object.')
@@ -118,7 +114,7 @@ class StreamWrite(object):
         return cls(ptr)
 
     @classmethod
-    def from_file(cls, filename, endianness=Endianness.LITTLE):
+    def from_file(cls, filename: str, endianness: Endianness = Endianness.LITTLE):
         ptr = streamWriteCreateFromFile(filename.encode())
         if not ptr:
             raise Exception('Could not create a StreamWrite object from file "{}".'.format(filename))
@@ -127,50 +123,50 @@ class StreamWrite(object):
 
         return cls(ptr)
 
-    def write_to_file(self, filename):
+    def write_to_file(self, filename: str):
         if not streamWriteToFile(self._stream, filename.encode()):
             raise Exception('Could not write StreamWrite object to file "{}".'.format(filename))
 
-    def write_uint(self, data):
+    def write_uint(self, data: int):
         streamWriteUInt(self._stream, data)
 
-    def write_ushort(self, data):
+    def write_ushort(self, data: int):
         streamWriteUShort(self._stream, data)
 
-    def write_ubyte(self, data):
+    def write_ubyte(self, data: int):
         streamWriteUByte(self._stream, data)
 
-    def write_int(self, data):
+    def write_int(self, data: int):
         streamWriteInt(self._stream, data)
 
-    def write_short(self, data):
+    def write_short(self, data: int):
         streamWriteShort(self._stream, data)
 
-    def write_byte(self, data):
+    def write_byte(self, data: int):
         streamWriteByte(self._stream, data)
 
-    def write_bytes(self, data):
+    def write_bytes(self, data: bytes):
         count = len(data)
         byte_buffer = create_string_buffer(count)
         streamWriteBytes(self._stream, byte_buffer, count)
 
-    def get_endianness(self):
+    def get_endianness(self) -> Endianness:
         return streamWriteGetEndianness(self._stream)
 
-    def set_endianness(self, endianness):
+    def set_endianness(self, endianness: Endianness):
         streamWriteSetEndianness(self._stream, endianness)
 
-    def seek(self, offset):
+    def seek(self, offset: int):
         streamWriteSeek(self._stream, offset)
 
     @property
-    def pointer(self):
+    def pointer(self) -> int:
         return self._stream
 
     @property
-    def size(self):
+    def size(self) -> int:
         return streamWriteGetSize(self._stream)
 
     @property
-    def index(self):
+    def index(self) -> int:
         return streamWriteGetIndex(self._stream)

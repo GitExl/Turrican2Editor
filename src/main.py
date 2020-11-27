@@ -36,9 +36,9 @@ class Turrican2EditApp(wx.App):
 def main():
     ctypes.CDLL('user32').SetProcessDPIAware()
 
-    app = Turrican2EditApp()
+    app: Turrican2EditApp = Turrican2EditApp()
 
-    frame = FrameMain()
+    frame: FrameMain = FrameMain()
     frame.Show()
 
     app.MainLoop()

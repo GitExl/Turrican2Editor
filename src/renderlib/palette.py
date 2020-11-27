@@ -24,6 +24,7 @@
 from ctypes import *
 
 from renderlib.dll import dll
+from renderlib.stream_read import StreamRead
 
 
 __all__ = ['Palette']
@@ -38,19 +39,19 @@ paletteDestroy.argtypes = [c_void_p]
 paletteDestroy.restype = None
 
 
-class Palette(object):
+class Palette:
     """
     Contains an arbitrary number of color values. Normally used with a Bitplane to create a Surface.
     """
 
-    def __init__(self, ptr):
-        self._palette = ptr
+    def __init__(self, ptr: int):
+        self._palette: int = ptr
 
     def __del__(self):
         paletteDestroy(self._palette)
 
     @classmethod
-    def from_stream(cls, stream, length, bits_per_channel, read_alpha=False):
+    def from_stream(cls, stream: StreamRead, length: int, bits_per_channel: int, read_alpha: bool = False):
         """
         Creates a new palette by reading it from a stream.
         :param stream: the stream to read from.
@@ -66,5 +67,5 @@ class Palette(object):
         return cls(ptr)
 
     @property
-    def pointer(self):
+    def pointer(self) -> int:
         return self._palette

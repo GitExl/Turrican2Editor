@@ -24,7 +24,6 @@
 from ctypes import *
 
 from renderlib.surface import Surface
-
 from renderlib.dll import dll
 
 
@@ -65,16 +64,16 @@ class Presenter(object):
     Handles displaying a Surface onto a GDI window.
     """
 
-    def __init__(self, ptr):
-        self._presenter = ptr
-        self._scale = presenterGetScale(self._presenter)
-        self._surface = Surface(presenterGetSurface(self._presenter), destroy=False)
+    def __init__(self, ptr: int):
+        self._presenter: int = ptr
+        self._scale: int = presenterGetScale(self._presenter)
+        self._surface: Surface = Surface(presenterGetSurface(self._presenter), destroy=False)
 
     def __del__(self):
         presenterDestroy(self._presenter)
 
     @classmethod
-    def from_window(cls, hwnd, scale):
+    def from_window(cls, hwnd: int, scale: int):
         """
         Creates a new presenter for a window.
         :param hwnd: the handle of the GDI window to create a presenter for.
@@ -100,14 +99,14 @@ class Presenter(object):
         presenterPresent(self._presenter)
 
     @property
-    def scale(self):
+    def scale(self) -> int:
         """
         :return: The pixel scale of this presenter.
         """
         return self._scale
 
     @scale.setter
-    def scale(self, scale):
+    def scale(self, scale: int):
         """
         Sets the pixel scale of this presenter.
         :param scale: the new pixel scale.
@@ -116,7 +115,7 @@ class Presenter(object):
         self._scale = scale
 
     @property
-    def surface(self):
+    def surface(self) -> Surface:
         """
         :return: The surface object of this presenter.
         """

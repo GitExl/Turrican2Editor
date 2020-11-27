@@ -21,49 +21,62 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-class EditMode(object):
+from typing import Dict, Optional, Tuple
+
+import wx
+
+from renderlib.surface import Surface
+
+from turrican2.graphics import Graphics
+from turrican2.level import Level
+from turrican2.world import World
+
+from ui.camera import Camera
+
+
+class EditMode:
 
     def __init__(self, frame):
         self._frame = frame
 
-        self._mouse_position = (0, 0)
-        self._world = None
-        self._level = None
+        self._mouse_position: Tuple[int, int] = (0, 0)
+        self._world: Optional[World] = None
+        self._level: Optional[Level] = None
 
-    def mouse_left_down(self):
+    def mouse_left_down(self, event: wx.MouseEvent):
         pass
 
-    def mouse_left_up(self):
+    def mouse_left_up(self, event: wx.MouseEvent):
         pass
 
-    def mouse_move(self):
+    def mouse_move(self, event: wx.MouseEvent):
         pass
 
-    def paint(self, surface, camera, graphics):
+    def paint(self, surface: Surface, camera: Camera, graphics: Graphics):
         pass
 
-    def key_char(self, key_code):
+    def key_char(self, key_code: int):
         pass
 
     def level_changed(self):
         pass
 
-    def undo_restore_item(self, item):
+    def undo_restore_item(self, item: Dict):
         pass
 
-    def undo_store_item(self):
+    def undo_store_item(self) -> Dict:
         pass
 
-    def set_mouse_position(self, position):
+    def set_mouse_position(self, position: Tuple[int, int]):
         self._mouse_position = position
 
-    def set_level(self, world, level):
+    def set_level(self, world: World, level: Level):
         self._world = world
         self._level = level
         self.level_changed()
 
     @staticmethod
-    def get_selection_rectangle(start, end):
+    def get_selection_rectangle(start: Tuple[int, int], end: Tuple[int, int]):
         x1, y1 = start
         x2, y2 = end
 

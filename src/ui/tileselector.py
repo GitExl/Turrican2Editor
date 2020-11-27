@@ -22,6 +22,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import math
+from typing import Optional, Tuple
 
 import wx
 import wx.lib.newevent
@@ -30,6 +31,7 @@ from renderlib.presenter import Presenter
 from renderlib.surface import BlendOp
 
 from turrican2.tilemap import Tilemap
+from turrican2.tileset import TileSet
 
 from ui.camera import Camera
 
@@ -56,15 +58,15 @@ class TileSelector(wx.Panel):
 
         self.Scrollbar.SetScrollbar(0, 0, 0, 0)
 
-        self._presenter = Presenter.from_window(self.Viewport.GetHandle(), config.SCALE)
-        self._camera = Camera(0, 0, 0, 0)
+        self._presenter: Presenter = Presenter.from_window(self.Viewport.GetHandle(), config.SCALE)
+        self._camera: Camera = Camera(0, 0, 0, 0)
 
-        self._tilemap = None
-        self._tileset = None
-        self._select_start = None
-        self._select_end = None
+        self._tilemap: Optional[Tilemap] = None
+        self._tileset: Optional[TileSet] = None
+        self._select_start: Optional[Tuple[int, int]] = None
+        self._select_end: Optional[Tuple[int, int]] = None
 
-        self._show_collision = False
+        self._show_collision: bool = False
 
         self.Viewport.Bind(wx.EVT_PAINT, self.paint)
         self.Viewport.Bind(wx.EVT_SIZE, self.resize)
@@ -74,7 +76,7 @@ class TileSelector(wx.Panel):
         self.Viewport.Bind(wx.EVT_MOTION, self.mouse_move)
         self.Scrollbar.Bind(wx.EVT_SCROLL, self.scroll)
 
-    def set_tileset(self, tileset):
+    def set_tileset(self, tileset: TileSet):
         self._tileset = tileset
         self.populate_tiles()
 
@@ -89,7 +91,7 @@ class TileSelector(wx.Panel):
         tiles_width = int(math.floor(surface.width / float(Tilemap.TILE_SIZE)))
         tiles_height = int(math.ceil(len(self._tileset.tiles) / float(tiles_width)))
 
-        tiles = range(0, len(self._tileset.tiles))
+        tiles = list(range(0, len(self._tileset.tiles)))
         self._tilemap = Tilemap(tiles, tiles_width, tiles_height)
 
         self._camera.set_max(tiles_width * Tilemap.TILE_SIZE, tiles_height * Tilemap.TILE_SIZE)
@@ -97,7 +99,7 @@ class TileSelector(wx.Panel):
 
         self.Scrollbar.SetThumbPosition(0)
 
-    def resize(self, event):
+    def resize(self, event: wx.SizeEvent):
         self._presenter.resize()
         surface = self._presenter.surface
 
@@ -114,7 +116,7 @@ class TileSelector(wx.Panel):
             else:
                 self.Scrollbar.SetScrollbar(0, 0, 0, 0)
 
-    def paint(self, event):
+    def paint(self, event: wx.PaintEvent):
         if not self._tileset:
             return
 
@@ -146,7 +148,7 @@ class TileSelector(wx.Panel):
 
         self._presenter.present()
 
-    def mouse_wheel(self, event):
+    def mouse_wheel(self, event: wx.MouseEvent):
         if not self._tileset:
             return
 
@@ -156,7 +158,7 @@ class TileSelector(wx.Panel):
 
         self.Viewport.Refresh(False)
 
-    def mouse_left_down(self, event):
+    def mouse_left_down(self, event: wx.MouseEvent):
         if not self._tileset:
             return
 
@@ -171,7 +173,7 @@ class TileSelector(wx.Panel):
 
         self.Viewport.Refresh(False)
 
-    def mouse_left_up(self, event):
+    def mouse_left_up(self, event: wx.MouseEvent):
         if not self._tilemap:
             return
 
@@ -202,7 +204,7 @@ class TileSelector(wx.Panel):
         event = TileSelector.SelectEvent(selection=selection)
         wx.PostEvent(self.GetEventHandler(), event)
 
-    def mouse_move(self, event):
+    def mouse_move(self, event: wx.MouseEvent):
         if not self._select_start:
             return
 
@@ -212,10 +214,10 @@ class TileSelector(wx.Panel):
         self._select_end = (x, y)
         self.Viewport.Refresh(False)
 
-    def scroll(self, event):
+    def scroll(self, event: wx.ScrollEvent):
         self.Viewport.Refresh(False)
 
-    def get_tile_position(self, pos):
+    def get_tile_position(self, pos: Tuple[int, int]) -> Tuple[int, int]:
         x = int(pos[0] / self._presenter.scale)
         y = int(pos[1] / self._presenter.scale)
         x, y = self._camera.camera_to_world(x, y)
@@ -224,6 +226,6 @@ class TileSelector(wx.Panel):
 
         return x, y
 
-    def show_collision(self, show):
+    def show_collision(self, show: bool):
         self._show_collision = show
         self.Viewport.Refresh(False)

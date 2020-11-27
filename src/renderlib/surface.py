@@ -24,10 +24,11 @@
 from ctypes import *
 
 from renderlib.dll import dll
+from renderlib.font import Font
 from renderlib.utils import Rectangle
 
 
-__all__ = ['Surface']
+__all__ = ['Surface', 'BlendOp']
 
 
 # Surface functions.
@@ -113,25 +114,25 @@ renderBlitBlendScale.argtypes = [c_void_p, c_void_p, c_int, c_int, c_int, c_int,
 renderBlitBlendScale.restype = None
 
 
-class BlendOp(object):
-    SOLID = 0
-    ALPHA50 = 1
-    ALPHA = 2
-    ALPHA_SIMPLE = 3
+class BlendOp:
+    SOLID: int = 0
+    ALPHA50: int = 1
+    ALPHA: int = 2
+    ALPHA_SIMPLE: int = 3
 
 
-class Surface(object):
+class Surface:
 
-    def __init__(self, ptr, destroy=True):
-        self._surface = ptr
-        self._destroy = destroy
+    def __init__(self, ptr: int, destroy: bool = True):
+        self._surface: int = ptr
+        self._destroy: bool = destroy
 
     def __del__(self):
         if self._destroy:
             surfaceDestroy(self._surface)
 
     @classmethod
-    def empty(cls, width, height):
+    def empty(cls, width: int, height: int):
         ptr = surfaceCreate(width, height)
         if not ptr:
             raise Exception('Could not create Surface object with size {}x{}.'.format(width, height))
@@ -139,7 +140,7 @@ class Surface(object):
         return cls(ptr)
 
     @classmethod
-    def from_png(cls, filename):
+    def from_png(cls, filename: str):
         ptr = surfaceReadFromPNG(filename.encode())
         if not ptr:
             raise Exception('Could not read Surface object from PNG "{}".'.format(filename))
@@ -154,53 +155,53 @@ class Surface(object):
         surface_ptr = surfaceFlipY(self._surface)
         return Surface(surface_ptr)
 
-    def write_to_png(self, filename):
-        return surfaceWriteToPNG(filename.encode())
+    def write_to_png(self, filename: str, compress_level: int = 9):
+        return surfaceWriteToPNG(self._surface, filename.encode(), compress_level)
 
-    def extract(self, surface_dest, x, y):
+    def extract(self, surface_dest, x: int, y: int):
         surfaceExtract(self._surface, surface_dest.pointer, x, y)
 
-    def fill(self, color):
+    def fill(self, color: int):
         surfaceFill(self._surface, color)
 
     def clear(self):
         surfaceClear(self._surface)
 
-    def outline(self, surface_source, x, y, color):
+    def outline(self, surface_source, x: int, y: int, color: int):
         renderOutline(self._surface, surface_source.pointer, x, y, color)
 
-    def line(self, x1, y1, x2, y2, color):
+    def line(self, x1: int, y1: int, x2: int, y2: int, color: int):
         renderLine(self._surface, x1, y1, x2, y2, color)
 
-    def text(self, font, x, y, text, color):
+    def text(self, font: Font, x: int, y: int, text: str, color: int):
         renderText(self._surface, font.pointer, x, y, text.encode(), color)
 
-    def box(self, x, y, width, height, color):
+    def box(self, x: int, y: int, width: int, height: int, color: int):
         renderBox(self._surface, x, y, width, height, color)
 
-    def blit(self, surface_source, x, y):
+    def blit(self, surface_source, x: int, y: int):
         renderBlit(self._surface, surface_source.pointer, x, y)
 
-    def box_fill(self, x, y, width, height, color, blend_op):
+    def box_fill(self, x: int, y: int, width: int, height: int, color: int, blend_op: int):
         renderBoxFill(self._surface, x, y, width, height, color, blend_op)
 
-    def blit_blend(self, surface_source, x, y, blend_op):
+    def blit_blend(self, surface_source, x: int, y: int, blend_op: int):
         renderBlitBlend(self._surface, surface_source.pointer, x, y, blend_op)
 
-    def blit_blend_scale(self, surface_source, x, y, width, height, blend_op):
+    def blit_blend_scale(self, surface_source, x: int, y: int, width: int, height: int, blend_op: int):
         renderBlitBlendScale(self._surface, surface_source.pointer, x, y, width, height, blend_op)
 
-    def get_used_rectangle(self):
+    def get_used_rectangle(self) -> Rectangle:
         return surfaceUsedRect(self._surface)
 
     @property
-    def pointer(self):
+    def pointer(self) -> int:
         return self._surface
 
     @property
-    def width(self):
+    def width(self) -> int:
         return surfaceGetWidth(self._surface)
 
     @property
-    def height(self):
+    def height(self) -> int:
         return surfaceGetHeight(self._surface)

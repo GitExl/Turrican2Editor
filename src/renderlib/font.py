@@ -46,19 +46,19 @@ fontDestroy.argtypes = [c_void_p]
 fontDestroy.restype = None
 
 
-class Font(object):
+class Font:
     """
     A drawable Font.
     """
 
-    def __init__(self, ptr):
-        self._font = ptr
+    def __init__(self, ptr: int):
+        self._font: int = ptr
 
     def __del__(self):
         fontDestroy(self._font)
 
     @classmethod
-    def from_png(cls, filename):
+    def from_png(cls, filename: str):
         """
         Creates a new font from a PNG file.
         :param filename: the filename of the PNG file to create the font from.
@@ -71,5 +71,5 @@ class Font(object):
         return cls(ptr)
 
     @property
-    def pointer(self):
+    def pointer(self) -> int:
         return self._font

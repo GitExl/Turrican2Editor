@@ -22,27 +22,28 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import math
+from typing import Tuple
 
 
-class Camera(object):
+class Camera:
 
-    def __init__(self, width, height, max_x, max_y):
-        self._width = width
-        self._height = height
+    def __init__(self, width: int, height: int, max_x: int, max_y: int):
+        self._width: int = width
+        self._height: int = height
 
-        self._x = 0
-        self._y = 0
+        self._x: int = 0
+        self._y: int = 0
 
-        self._max_x = max_x
-        self._max_y = max_y
+        self._max_x: int = max_x
+        self._max_y: int = max_y
 
-    def move_relative(self, x, y):
+    def move_relative(self, x: int, y: int):
         self._x += x
         self._y += y
 
         self.clamp()
 
-    def move_absolute(self, x, y):
+    def move_absolute(self, x: int, y: int):
         self._x = x
         self._y = y
 
@@ -59,42 +60,42 @@ class Camera(object):
         if self._y < 0:
             self._y = 0
 
-    def camera_to_world(self, x, y):
+    def camera_to_world(self, x: int, y: int) -> Tuple[int, int]:
         return int(math.floor(x + self._x)), int(math.floor(y + self._y))
 
-    def world_to_camera(self, x, y):
+    def world_to_camera(self, x, y) -> Tuple[int, int]:
         return int(math.floor(x - self._x)), int(math.floor(y - self._y))
 
-    def set_max(self, max_x, max_y):
+    def set_max(self, max_x: int, max_y: int):
         self._max_x = max_x
         self._max_y = max_y
 
         self.clamp()
 
-    def set_size(self, width, height):
+    def set_size(self, width: int, height: int):
         self._width = width
         self._height = height
 
         self.clamp()
 
-    def world_contains(self, x1, y1, x2, y2):
+    def world_contains(self, x1: int, y1: int, x2: int, y2: int):
         return not (x2 < self._x or y2 < self._y or x1 >= self._x + self._width or y1 >= self._y + self.height)
 
-    def screen_contains(self, x1, y1, x2, y2):
+    def screen_contains(self, x1: int, y1: int, x2: int, y2: int):
         return not (x2 < 0 or y2 < 0 or x1 >= self._width or y1 >= self.height)
 
     @property
-    def x(self):
+    def x(self) -> int:
         return self._x
 
     @property
-    def y(self):
+    def y(self) -> int:
         return self._y
 
     @property
-    def width(self):
+    def width(self) -> int:
         return self._width
 
     @property
-    def height(self):
+    def height(self) -> int:
         return self._height

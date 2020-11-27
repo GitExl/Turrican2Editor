@@ -51,21 +51,21 @@ from ui.camera import Camera
 import config
 
 
-class MouseState(object):
-    NONE = 0
-    MOVE = 1
+class MouseState:
+    NONE: int = 0
+    MOVE: int = 1
 
 
-class EditMode(object):
-    TILES = 0
-    ENTITIES = 1
-    START = 2
+class EditMode:
+    TILES: int = 0
+    ENTITIES: int = 1
+    START: int = 2
 
 
-COLOR_ORIGIN = 0xFFFFFFFF
+COLOR_ORIGIN: int = 0xFFFFFFFF
 
-COLOR_ENTITY_HOVER = 0xFFFFFFFF
-COLOR_ENTITY_SELECTED = 0xFFFF0000
+COLOR_ENTITY_HOVER: int = 0xFFFFFFFF
+COLOR_ENTITY_SELECTED: int = 0xFFFF0000
 
 
 class FrameMain(FrameMainBase):

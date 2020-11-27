@@ -24,6 +24,8 @@
 from ctypes import *
 
 from renderlib.dll import dll
+from renderlib.palette import Palette
+from renderlib.stream_read import StreamRead
 from renderlib.surface import Surface
 
 
@@ -43,31 +45,31 @@ bitplaneToSurface.argtypes = [c_void_p, c_void_p, c_void_p, c_uint, c_int, c_uin
 bitplaneToSurface.restype = c_void_p
 
 
-class BitplaneType(object):
-    CHUNKY = 0
-    PLANAR = 1
-    AMIGA_SPRITE = 2
+class BitplaneType:
+    CHUNKY: int = 0
+    PLANAR: int = 1
+    AMIGA_SPRITE: int = 2
 
 
-class MaskMode(object):
-    NONE = 0
-    INDEX = 1
-    BITPLANE = 2
+class MaskMode:
+    NONE: int = 0
+    INDEX: int = 1
+    BITPLANE: int = 2
 
 
-class Bitplane(object):
+class Bitplane:
     """
     A bitplane holds a number of 8 bit pixels, without a palette. It can read a bitmap from a series of bitplanes.
     """
 
-    def __init__(self, ptr):
-        self._bitplane = ptr
+    def __init__(self, ptr: int):
+        self._bitplane: int = ptr
 
     def __del__(self):
         bitplaneDestroy(self._bitplane)
 
     @classmethod
-    def from_stream(cls, stream, bitplane_type, width, height, planes):
+    def from_stream(cls, stream: StreamRead, bitplane_type: BitplaneType, width: int, height: int, planes: int):
         """
         Creates a new bitplane by reading it from a stream.
         :param stream: the stream to read from.
@@ -83,7 +85,7 @@ class Bitplane(object):
 
         return cls(ptr)
 
-    def create_surface(self, mask, palette, mask_color, shift, mask_mode):
+    def create_surface(self, mask, palette: Palette, mask_color: int, shift: int, mask_mode: MaskMode):
         """
         Creates a Surface from this Bitplane.
         :param mask: the bitplane to use as the mask.
@@ -105,5 +107,5 @@ class Bitplane(object):
         return Surface(ptr)
 
     @property
-    def pointer(self):
+    def pointer(self) -> int:
         return self._bitplane

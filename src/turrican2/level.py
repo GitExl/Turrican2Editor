@@ -26,7 +26,9 @@ from typing import Dict, List, Optional, Tuple
 
 from renderlib.stream_read import StreamRead
 from renderlib.stream_write import StreamWrite
+
 from turrican2.tilemap import Tilemap
+
 from ui.camera import Camera
 
 
@@ -147,7 +149,7 @@ class Level:
                 key = (type_key, subtype_key)
                 self._entity_templates[key] = EntityTemplate(name, type_key, subtype_key, merged_data)
 
-    def save_header(self, stream):
+    def save_header(self, stream: StreamWrite):
         stream.write_uint(self._offset_level_data + Level.BASE_OFFSET)
 
         stream.write_ushort(self._tilemap_width)
@@ -178,14 +180,14 @@ class Level:
 
         stream.write_uint(self._offset_code_3 + Level.BASE_OFFSET)
 
-    def save(self, stream, offset=None):
+    def save(self, stream: StreamWrite, offset: Optional[int] = None):
         if offset is None:
             offset = self._offset_level_data
 
         stream.seek(offset)
         self._tilemap.write_to(stream)
 
-    def load_header(self, stream):
+    def load_header(self, stream: StreamRead):
         self._offset_level_data = stream.read_uint() - Level.BASE_OFFSET
 
         self._tilemap_width = stream.read_ushort()
@@ -216,7 +218,7 @@ class Level:
 
         self._offset_code_3 = stream.read_uint() - Level.BASE_OFFSET
 
-    def load(self, stream: StreamRead, offset: int=0):
+    def load(self, stream: StreamRead, offset: int = 0):
         stream.seek(self._offset_level_data + offset)
         self._tilemap = Tilemap.from_stream(stream, self._tilemap_width, self._tilemap_height)
 

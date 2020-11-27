@@ -26,9 +26,10 @@ from typing import Dict, List, Optional
 
 import wx
 
-from renderlib.stream_read import StreamRead, Endianness
+from renderlib.stream_read import StreamRead
 from renderlib.stream_write import StreamWrite
 from renderlib.palette import Palette
+from renderlib.utils import Endianness
 
 from turrican2.tileset import TileSet
 from turrican2.level import Level
@@ -36,7 +37,7 @@ from turrican2.level import Level
 
 class World:
 
-    BASE_OFFSET = 0x20700
+    BASE_OFFSET: int = 0x20700
 
     def __init__(self):
         self._filename: Optional[str] = None
@@ -52,7 +53,6 @@ class World:
         self._levels: Optional[List[Level]] = None
         self._palette: Optional[Palette] = None
         self._tileset: Optional[TileSet] = None
-        # self._sprites = None
 
     def save(self):
         stream = StreamWrite.from_file(self._filename, Endianness.BIG)

@@ -25,10 +25,11 @@ import json
 import os.path
 from typing import Dict, List
 
-from renderlib.stream_read import StreamRead, Endianness
+from renderlib.stream_read import StreamRead
 from renderlib.palette import Palette
 from renderlib.bitplane import Bitplane, BitplaneType, MaskMode
 from renderlib.surface import Surface
+from renderlib.utils import Endianness
 
 
 class Graphics:

@@ -24,9 +24,10 @@
 from ctypes import *
 
 from renderlib.dll import dll
+from renderlib.utils import Endianness
 
 
-__all__ = ['StreamRead', 'Endianness']
+__all__ = ['StreamRead']
 
 
 streamReadGetSize = dll.streamReadGetSize
@@ -102,24 +103,19 @@ streamReadInsert.argtypes = [c_void_p, c_char_p, c_uint32]
 streamReadInsert.restype = None
 
 
-class Endianness(object):
-    LITTLE = 0
-    BIG = 1
-
-
-class StreamRead(object):
+class StreamRead:
     """
     Reads data from a memory stream. Also handles byte endianness.
     """
 
-    def __init__(self, ptr):
-        self._stream = ptr
+    def __init__(self, ptr: int):
+        self._stream: int = ptr
 
     def __del__(self):
         streamReadDestroy(self._stream)
 
     @classmethod
-    def from_file(cls, filename, endianness=Endianness.LITTLE):
+    def from_file(cls, filename: str, endianness: Endianness = Endianness.LITTLE):
         """
         Creates a new stream from a file.
         :param filename: the filename to read from.
@@ -134,43 +130,43 @@ class StreamRead(object):
 
         return cls(ptr)
 
-    def read_uint(self):
+    def read_uint(self) -> int:
         """
         :return: a uint value from the stream.
         """
         return streamReadUInt(self._stream)
 
-    def read_ushort(self):
+    def read_ushort(self) -> int:
         """
         :return: a ushort value from the stream.
         """
         return streamReadUShort(self._stream)
 
-    def read_ubyte(self):
+    def read_ubyte(self) -> int:
         """
         :return: a ubyte value from the stream.
         """
         return streamReadUByte(self._stream)
 
-    def read_int(self):
+    def read_int(self) -> int:
         """
         :return: a int value from the stream.
         """
         return streamReadInt(self._stream)
 
-    def read_short(self):
+    def read_short(self) -> int:
         """
         :return: a short value from the stream.
         """
         return streamReadShort(self._stream)
 
-    def read_byte(self):
+    def read_byte(self) -> int:
         """
         :return: a byte value from the stream.
         """
         return streamReadByte(self._stream)
 
-    def read_bytes(self, count):
+    def read_bytes(self, count) -> Array[c_char]:
         """
         Reads a number of bytes from this stream.
         :param count: the number of bytes to read.
@@ -180,34 +176,34 @@ class StreamRead(object):
         streamReadBytes(self._stream, count, byte_buffer)
         return byte_buffer
 
-    def get_endianness(self):
+    def get_endianness(self) -> Endianness:
         """
         :return: the endianness of this stream.
         """
         return streamReadGetEndianness(self._stream)
 
-    def set_endianness(self, endianness):
+    def set_endianness(self, endianness: Endianness):
         """
         Sets the endianness of this stream.
         :param endianness: an Endianness value.
         """
         streamReadSetEndianness(self._stream, endianness)
 
-    def seek(self, offset):
+    def seek(self, offset: int):
         """
         Seeks to a position in this stream.
         :param offset: the absolute offset to seek to.
         """
         streamReadSeek(self._stream, offset)
 
-    def skip(self, count):
+    def skip(self, count: int):
         """
         Skips a number of bytes in this stream.
         :param count: the number of bytes to skip.
         """
         streamReadSkip(self._stream, count)
 
-    def insert(self, filename, offset):
+    def insert(self, filename: str, offset: int):
         """
         Inserts the data from a file at a specific offset in this stream.
         The original file is not modified, the insertion only occurs in memory.
@@ -217,25 +213,25 @@ class StreamRead(object):
         streamReadInsert(self._stream, filename.encode(), offset)
 
     @property
-    def pointer(self):
+    def pointer(self) -> int:
         return self._stream
 
     @property
-    def size(self):
+    def size(self) -> int:
         """
         :return: the size of this stream in bytes.
         """
         return streamReadGetSize(self._stream)
 
     @property
-    def is_end(self):
+    def is_end(self) -> bool:
         """
         :return: True if the end of this stream has been reached.
         """
         return streamReadIsEnd(self._stream)
 
     @property
-    def index(self):
+    def index(self) -> int:
         """
         :return: the current reading index in this stream.
         """

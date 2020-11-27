@@ -21,27 +21,31 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from typing import List, Optional
+
 import wx
 import wx.lib.newevent
 
+from renderlib.font import Font
 from renderlib.presenter import Presenter
-from renderlib.surface import BlendOp
+from renderlib.surface import BlendOp, Surface
 from renderlib.utils import swap_rgba
 
 import config
+from turrican2.graphics import Graphics
+from turrican2.level import EntityTemplate, Level
+
+ICON_WIDTH: int = 32
+ICON_HEIGHT: int = 28
+ICON_SPACING: int = 1
 
 
-ICON_WIDTH = 32
-ICON_HEIGHT = 28
-ICON_SPACING = 1
+class PickerEntity:
 
-
-class PickerEntity(object):
-
-    def __init__(self, name, template, surface):
-        self.name = name.upper()
-        self.template = template
-        self.surface = surface
+    def __init__(self, name: str, template: EntityTemplate, surface: Surface):
+        self.name: str = name.upper()
+        self.template: EntityTemplate = template
+        self.surface: Surface = surface
 
 
 class EntityPicker(wx.Panel):
@@ -62,13 +66,13 @@ class EntityPicker(wx.Panel):
         self.Layout()
         sizer.Fit(self)
 
-        self._presenter = Presenter.from_window(self.Viewport.GetHandle(), config.SCALE)
+        self._presenter: Presenter = Presenter.from_window(self.Viewport.GetHandle(), config.SCALE)
 
-        self._graphics = None
-        self._font = None
-        self._entities = None
+        self._graphics: Optional[Graphics] = None
+        self._font: Optional[Font] = None
+        self._entities: List[PickerEntity] = []
 
-        self._selected_index = -1
+        self._selected_index: int = -1
 
         self.Viewport.Bind(wx.EVT_PAINT, self.paint)
         self.Viewport.Bind(wx.EVT_SIZE, self.resize)
@@ -76,13 +80,13 @@ class EntityPicker(wx.Panel):
         self.Viewport.Bind(wx.EVT_LEFT_DOWN, self.mouse_left_down)
         self.Scrollbar.Bind(wx.EVT_SCROLL, self.scroll)
 
-    def set_graphics(self, graphics):
+    def set_graphics(self, graphics: Graphics):
         self._graphics = graphics
 
-    def set_font(self, font):
+    def set_font(self, font: Font):
         self._font = font
 
-    def set_level(self, level):
+    def set_level(self, level: Level):
         self._entities = []
 
         templates = level.get_entity_templates()
@@ -106,7 +110,7 @@ class EntityPicker(wx.Panel):
         self.set_scrollbar()
         self.Viewport.Refresh(False)
 
-    def paint(self, event):
+    def paint(self):
         if not self._entities:
             return
 
@@ -133,18 +137,18 @@ class EntityPicker(wx.Panel):
 
         self._presenter.present()
 
-    def resize(self, event):
+    def resize(self, event: wx.SizeEvent):
         self._presenter.resize()
         self.set_scrollbar()
 
-    def mouse_wheel(self, event):
+    def mouse_wheel(self, event: wx.MouseEvent):
         position = self.Scrollbar.GetThumbPosition()
         position -= int(event.GetWheelRotation() / 20) * ICON_HEIGHT
         self.Scrollbar.SetThumbPosition(position)
 
         self.Viewport.Refresh(False)
 
-    def mouse_left_down(self, event):
+    def mouse_left_down(self, event: wx.MouseEvent):
         if not self._entities:
             return
 
@@ -160,10 +164,10 @@ class EntityPicker(wx.Panel):
         event = EntityPicker.PickEvent(template=template)
         wx.PostEvent(self.GetEventHandler(), event)
 
-    def scroll(self, event):
+    def scroll(self):
         self.Viewport.Refresh(False)
 
-    def set_selection(self, type, subtype):
+    def set_selection(self, type: int, subtype: int):
         for index, entity in enumerate(self._entities):
             if entity.template.type == type and entity.template.subtype == subtype:
                 self._selected_index = index

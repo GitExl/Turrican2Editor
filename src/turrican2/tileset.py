@@ -30,10 +30,10 @@ from renderlib.surface import BlendOp, Surface
 
 
 class CollisionType:
-    SOLID = 1
-    DESTRUCTABLE = 127
-    SECRET = 128
-    HURT = 211
+    SOLID: int = 1
+    DESTRUCTABLE: int = 127
+    SECRET: int = 128
+    HURT: int = 211
 
 
 class Tile:

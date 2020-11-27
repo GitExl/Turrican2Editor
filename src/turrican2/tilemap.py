@@ -27,13 +27,15 @@ from typing import List
 from renderlib.stream_read import StreamRead
 from renderlib.stream_write import StreamWrite
 from renderlib.surface import Surface
+
 from turrican2.tileset import TileSet
+
 from ui.camera import Camera
 
 
 class Tilemap:
 
-    TILE_SIZE = 32
+    TILE_SIZE: int = 32
 
     def __init__(self, tiles: List[int], width: int, height: int):
         self._tiles: List[int] = tiles
@@ -74,7 +76,7 @@ class Tilemap:
             for y in range(0, self._height):
                 stream.write_ubyte(self._tiles[x + y * self._width])
 
-    def render(self, surface: Surface, camera: Camera, tileset: TileSet, collision=False):
+    def render(self, surface: Surface, camera: Camera, tileset: TileSet, collision: bool = False):
         start_x: int = int(math.floor(camera.x / Tilemap.TILE_SIZE))
         start_y: int = int(math.floor(camera.y / Tilemap.TILE_SIZE))
         end_x: int = int(math.floor((camera.x + camera.width) / Tilemap.TILE_SIZE)) + 1
@@ -100,7 +102,7 @@ class Tilemap:
                 else:
                     surface.blit(tile.surface, tile_x, tile_y)
 
-    def render_all(self, surface: Surface, tileset: TileSet, pos_x: int, pos_y: int, collision: bool=False):
+    def render_all(self, surface: Surface, tileset: TileSet, pos_x: int, pos_y: int, collision: bool = False):
         for y in range(0, self._height):
             for x in range(0, self._width):
                 index = self._tiles[x + y * self._width]

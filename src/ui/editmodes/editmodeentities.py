@@ -21,51 +21,54 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from typing import Dict, List, Optional, Tuple
+
 import wx
 
 from copy import deepcopy
 
-from renderlib.surface import BlendOp
+from renderlib.surface import BlendOp, Surface
 
-from turrican2.level import Level
-
+from ui.camera import Camera
 from ui.editmodes.editmode import EditMode
 
-
-class State(object):
-    NONE = 0
-    SELECT = 1
-    MOVE = 2
+from turrican2.graphics import Graphics
+from turrican2.level import Entity, EntityTemplate, Level
 
 
-COLOR_ENTITY_ORIGIN = 0xFFFFFFFF
-COLOR_ENTITY_SELECTION = 0xFFFFFFFF
+class State:
+    NONE: int = 0
+    SELECT: int = 1
+    MOVE: int = 2
 
 
 class EditModeEntities(EditMode):
 
+    COLOR_ENTITY_ORIGIN: int = 0xFFFFFFFF
+    COLOR_ENTITY_SELECTION: int = 0xFFFFFFFF
+
     def __init__(self, frame):
         EditMode.__init__(self, frame)
 
-        self._state = State.NONE
+        self._state: int = State.NONE
 
-        self._select_start = None
-        self._select_end = None
-        self._selection = []
+        self._select_start: Optional[Tuple[int, int]] = None
+        self._select_end: Optional[Tuple[int, int]] = None
+        self._selection: List[Entity] = []
 
-        self._template = None
+        self._template: Optional[EntityTemplate] = None
 
-        self._entity_hover = None
+        self._entity_hover: Optional[Entity] = None
 
-        self._entities_moving = None
-        self._entities_moving_start = None
-        self._entity_moved = False
+        self._entities_moving: Optional[List[Tuple[Entity, int, int]]] = None
+        self._entities_moving_start: Optional[Tuple[int, int]] = None
+        self._entity_moved: bool = False
 
-    def key_char(self, key_code):
+    def key_char(self, key_code: int):
         if key_code == wx.WXK_DELETE:
             self.delete_entities()
 
-    def mouse_left_down(self):
+    def mouse_left_down(self, event: wx.MouseEvent):
         control = wx.GetKeyState(wx.WXK_CONTROL)
 
         # Place an entity.
@@ -95,7 +98,7 @@ class EditModeEntities(EditMode):
             self._select_end = self.get_entity_position()
             self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_CROSS))
 
-    def mouse_left_up(self):
+    def mouse_left_up(self, event: wx.MouseEvent):
 
         # Entity select state.
         if self._state == State.SELECT:
@@ -114,7 +117,7 @@ class EditModeEntities(EditMode):
             if self._entity_moved:
                 self._frame.update_status()
 
-    def mouse_move(self):
+    def mouse_move(self, event: wx.MouseEvent):
         if self._state == State.SELECT:
             self._select_end = self.get_entity_position()
 
@@ -156,7 +159,7 @@ class EditModeEntities(EditMode):
             else:
                 self._frame.set_viewport_cursor(wx.Cursor(wx.CURSOR_DEFAULT))
 
-    def paint(self, surface, camera, graphics):
+    def paint(self, surface: Surface, camera: Camera, graphics: Graphics):
         control = wx.GetKeyState(wx.WXK_CONTROL)
 
         # Draw template entity.
@@ -175,7 +178,7 @@ class EditModeEntities(EditMode):
             entity_surface = surfaces[self._template.gfx_index]
             surface.blit_blend(entity_surface, x, y, BlendOp.ALPHA_SIMPLE)
 
-            surface.box_fill(origin_x, origin_y, Level.ORIGIN_SIZE, Level.ORIGIN_SIZE, COLOR_ENTITY_ORIGIN, BlendOp.ALPHA50)
+            surface.box_fill(origin_x, origin_y, Level.ORIGIN_SIZE, Level.ORIGIN_SIZE, EditModeEntities.COLOR_ENTITY_ORIGIN, BlendOp.ALPHA50)
 
         # Draw selection rectangle.
         elif self._state == State.SELECT and self._select_start:
@@ -189,7 +192,7 @@ class EditModeEntities(EditMode):
             x1, y1 = camera.world_to_camera(x1, y1)
             x2, y2 = camera.world_to_camera(x2, y2)
 
-            surface.box_fill(x1, y1, x2 - x1, y2 - y1, COLOR_ENTITY_SELECTION, BlendOp.ALPHA50)
+            surface.box_fill(x1, y1, x2 - x1, y2 - y1, EditModeEntities.COLOR_ENTITY_SELECTION, BlendOp.ALPHA50)
 
     def level_changed(self):
         self._selection = self.get_selected_entities()
@@ -207,13 +210,13 @@ class EditModeEntities(EditMode):
         self._frame.set_level_modified(True)
         self._frame.update_status()
 
-    def get_entity_position(self):
+    def get_entity_position(self) -> Tuple[int, int]:
         x = int(self._mouse_position[0] / Level.ORIGIN_SIZE)
         y = int(self._mouse_position[1] / Level.ORIGIN_SIZE)
 
         return x, y
 
-    def get_entity_movers(self):
+    def get_entity_movers(self) -> List[Tuple[Entity, int, int]]:
         entities = []
         for entity in self._selection:
             entities.append((entity, entity.x, entity.y))
@@ -229,6 +232,7 @@ class EditModeEntities(EditMode):
             entity.selected = True
 
         if len(self._selection) == 1:
+            entity = self._selection[0]
             self._frame.Entities.set_selection(entity.type, entity.subtype)
 
     def delete_entities(self):
@@ -245,7 +249,7 @@ class EditModeEntities(EditMode):
         self._frame.update_status()
         self._frame.set_level_modified(True)
 
-    def get_selected_entities(self):
+    def get_selected_entities(self) -> List[Entity]:
         entities = []
         for entity in self._level.entities:
             if entity.selected:
@@ -253,21 +257,21 @@ class EditModeEntities(EditMode):
 
         return entities
 
-    def set_template(self, template):
+    def set_template(self, template: EntityTemplate):
         self._template = template
         self._frame.refresh_viewport()
 
-    def get_hover_entity(self):
+    def get_hover_entity(self) -> Optional[Entity]:
         return self._entity_hover
 
-    def undo_restore_item(self, item):
+    def undo_restore_item(self, item: Dict):
         self._level.entities = item['entities']
         self._selection = self.get_selected_entities()
 
         self._frame.set_level_modified(True)
         self._frame.refresh_viewport()
 
-    def undo_store_item(self):
+    def undo_store_item(self) -> Dict:
         return {
             'entities': deepcopy(self._level.entities)
         }

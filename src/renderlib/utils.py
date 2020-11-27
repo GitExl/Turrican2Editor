@@ -26,7 +26,7 @@ from ctypes import *
 from renderlib.dll import dll
 
 
-__all__ = ['create_bgra', 'create_rgba', 'swap_rgba']
+__all__ = ['create_bgra', 'create_rgba', 'swap_rgba', 'Rectangle', 'Endianness']
 
 
 createBGRA = dll.createBGRA
@@ -42,22 +42,27 @@ swapRGBA.argtypes = [c_uint32]
 swapRGBA.restype = c_uint32
 
 
+class Endianness:
+    LITTLE: int = 0
+    BIG: int = 1
+
+
 class Rectangle(Structure):
     _fields_ = [
-        ("x1", c_int),
-        ("y1", c_int),
-        ("x2", c_int),
-        ("y2", c_int)
+        ('x1', c_int),
+        ('y1', c_int),
+        ('x2', c_int),
+        ('y2', c_int)
     ]
 
 
-def create_bgra(r, g, b, a):
+def create_bgra(r: int, g: int, b: int, a: int) -> int:
     return createBGRA(r, g, b, a)
 
 
-def create_rgba(r, g, b, a):
+def create_rgba(r: int, g: int, b: int, a: int) -> int:
     return createRGBA(r, g, b, a)
 
 
-def swap_rgba(color):
+def swap_rgba(color: int) -> int:
     return swapRGBA(color)
